@@ -52,6 +52,11 @@ exports.animal = function(req, res) {
                             { $project : { _id : 1 } },
                             { $limit : 15 }
                         ], function(err, docs) {
+                            if (err || docs.length == 1) {
+                                res.render('animal', { pageTitle: 'Add animal' , qAndA: q });
+                                return;
+                            }
+
                             console.log(docs);
 
                             for (var i = 0; i < docs.length; i++) {

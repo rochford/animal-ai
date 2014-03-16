@@ -1,0 +1,23 @@
+doctype html
+html
+  head
+    link(rel='stylesheet', href='/lib/bootstrap/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/lib/bootstrap/css/bootstrap-responsive.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+    title= pageTitle
+
+  body
+    div.container
+      div.content
+        div.hero-unit
+            div.row
+                div.span8
+                    span.label Think of an animal. Computer ask questions to guess the animal
+            div.row
+                div.span8
+                    span.label Number of animals #{numberAnimals}
+            div.row
+                div.span8
+                    a(href='/game') Play Game
+include includes/footer

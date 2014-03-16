@@ -1,0 +1,6 @@
+# nicer jade pages
+# need to get more data about animals when only have 1 in result set
+# restrict input to be lowercase and remove bad characters
+# startup check to ensure all animals are unique
+# rethink callbacks
+# when answer no to a guess, update the animal with the known properties.

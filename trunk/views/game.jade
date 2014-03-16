@@ -1,0 +1,28 @@
+doctype html
+html
+  head
+    link(rel='stylesheet', href='/lib/bootstrap/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/lib/bootstrap/css/bootstrap-responsive.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+    title= pageTitle
+
+  body
+    div.container
+        div.content
+          div.hero-unit
+             div.row
+                div.span4
+                  p Question Number #{questionNumber}
+                  - if (qAndA.length)
+                    each x in qAndA
+                      div.span8
+                        p #{x.question}, #{x.answer}
+                div.span8
+                  p #{question}
+                    div.row
+                      div.span4
+                        a(href='/yes') Yes
+                      div.span4
+                        a(href='/no') No
+include includes/footer

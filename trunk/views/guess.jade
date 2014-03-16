@@ -1,0 +1,23 @@
+doctype html
+html
+  head
+    link(rel='stylesheet', href='/lib/bootstrap/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/lib/bootstrap/css/bootstrap-responsive.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+    title= pageTitle
+
+  body
+    div.container
+        div.content
+          div.hero-unit
+             div.row
+                div.span4
+                  span.label My guess is...
+                  div.span4
+                    span.label= guess
+                      div.row
+                        div.span4
+                          a(href='/guessyes') Yes
+                          a(href='/guessno') No
+include includes/footer

@@ -27,10 +27,11 @@ var express = require('express')
 , path = require('path');
 var _ = require('underscore');
 var utils = require('./routes/utils.js')
+var mongo = require('./routes/mongo.js');
 var app = express();
 
 app.configure(function(){
-    app.set('port', process.env.PORT || 80);
+    app.set('port', process.env.PORT || 3000);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
     app.use(express.cookieParser('secretkahjda'));
@@ -49,8 +50,8 @@ app.configure('development', function(){
 });
 
 app.get('/', index.index);
+app.get('/about', index.about);
 app.get('/lost', index.lost);
-app.get('/reset', index.reset);
 
 app.get('/yes', game.yes);
 app.get('/no', game.no);
@@ -68,7 +69,11 @@ app.post('/animal', addanimal.postAnimal);
 
 app.get('/game', game.game);
 
+mongo.init(function (error) {
+    if (error)
+        throw error;
 
-http.createServer(app).listen(app.get('port'), function(){
-    console.log("Express server listening on port " + app.get('port'));
+    http.createServer(app).listen(app.get('port'), function(){
+        console.log("Express server listening on port " + app.get('port'));
+    });
 });

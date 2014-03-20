@@ -1,26 +1,20 @@
 doctype html
 html
-  head
-    link(rel='stylesheet', href='/lib/bootstrap/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/lib/bootstrap/css/bootstrap-responsive.min.css')
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    script(src='/js/analytics.js')
+	include includes/header
+	body
+		include includes/topbar
 
-    title= pageTitle
-
-  body
-    div.container
-      div.content
-        div.hero-unit
-          form(method='post',action='/question')
-           div.row
-            div.span4
-              span.label= pageTitle
-                div.row
-                  div.span4
-                    input(name='newquestion',type='text')
-                  div.row
-                    div.span4
-                      input(name='submit',type='submit').submit-button
+		div.container
+			div.content
+					div.row
+						div.span4
+							span.label= pageTitle
+							form(method='post',action='/question')
+							div.row
+								div.span4
+									input(name='newquestion',type='text')
+								div.row
+									div.span4
+										input(name='submit',type='submit').submit-button
 
 include includes/footer

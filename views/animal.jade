@@ -1,36 +1,30 @@
 doctype html
 html
-  head
-    link(rel='stylesheet', href='/lib/bootstrap/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/lib/bootstrap/css/bootstrap-responsive.min.css')
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    script(src='/js/analytics.js')
-
-    title= pageTitle
-
-  body
-    div.container
-      div.content
-        div.hero-unit
-          form(method='post',action='/animal')
-           div.row
-            div.span4
-              span.label= pageTitle
-                div.row
-                  div.span8
-                    span.label Animal name
-                    input(name='name',type='text')
-                  - if (qAndA.length)
-                      each x in qAndA
-                        div.row
-                          span.label= x
-                          input(name=x,type='radio',value='yes')
-                          | Yes
-                          input(name=x,type='radio',value='no')
-                          | No
-                div.row
-                  div.span4
-                    input(name='submit',type='submit').submit-button
+	include includes/header
+	body
+		include includes/topbar
+		div.container
+			div.content
+					div.row
+						div.span4
+							span.label= pageTitle
+								div.row
+									form(method='post',action='/animal')
+										div.span4
+											Animal name
+											input(name='name',type='text')
+											- if (qAndA.length)
+													each x in qAndA
+														div.row
+															div.span4
+																span.label= x
+																input(name=x,type='radio',value='yes')
+																| Yes
+																input(name=x,type='radio',value='no')
+																| No
+												div.row
+													div.span4
+														input(name='submit',type='submit').submit-button
 
 include includes/footer
 

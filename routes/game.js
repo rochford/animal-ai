@@ -18,10 +18,7 @@
 */
 var _ = require('underscore');
 var utils = require('./utils.js');
-
-var databaseUrl = "mydb"; // "username:password@example.com/mydb"
-var collections = ["questions","a2"];
-var db = require("mongojs").connect(databaseUrl, collections);
+var mongo = require('./mongo.js');
 
 var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
 var COOKIE_QUESTIONNUMBER    = 'questionnumber';
@@ -84,7 +81,7 @@ function nextQuestion(req, res) {
 
     console.log(query);
 
-    db.a2.find(query, function(err, animal) {
+    mongo.db.a2.find(query, function(err, animal) {
         if( err || !animal) {
             console.log("No animal found to update ");
             console.log("Single animal found");
@@ -102,7 +99,7 @@ function nextQuestion(req, res) {
             return;
         } else {
             console.log(animal);
-            db.a2.aggregate(
+            mongo.db.a2.aggregate(
                         [
                             { $match : query},
                             { $unwind : "$positives"},
@@ -112,7 +109,7 @@ function nextQuestion(req, res) {
                         ], function(err, pos_result) {
 
                             console.log("XXX 2");
-                            db.a2.aggregate(
+                            mongo.db.a2.aggregate(
                                         [
                                             { $match : query},
                                             { $unwind : "$negatives"},

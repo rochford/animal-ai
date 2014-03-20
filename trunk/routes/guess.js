@@ -18,10 +18,7 @@
 */
 var _ = require('underscore');
 var utils = require('./utils.js');
-
-var databaseUrl = "mydb"; // "username:password@example.com/mydb"
-var collections = ["questions","a2"];
-var db = require("mongojs").connect(databaseUrl, collections);
+var mongo = require('./mongo.js');
 
 var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
 var COOKIE_QUESTIONNUMBER    = 'questionnumber';
@@ -45,7 +42,7 @@ exports.guessyes = function(req, res){
     // update the db
     var numberOfQuestions = data.split("&");
     console.log("numberOfQuestions:" +  numberOfQuestions)
-    db.a2.find({ name: req.cookies.guess }, function(err, animal) {
+    mongo.db.a2.find({ name: req.cookies.guess }, function(err, animal) {
         if( err || !animal) {
             console.log("No animal found to update ");
             res.redirect('/');
@@ -63,7 +60,7 @@ exports.guessyes = function(req, res){
                 animal[0].negatives.push(q);
         }
         console.log(animal[0]);
-        db.a2.update({ name: req.cookies.guess }, animal[0], {multi:false},function() {
+        mongo.db.a2.update({ name: req.cookies.guess }, animal[0], {multi:false},function() {
             res.redirect('/');
         });
     });

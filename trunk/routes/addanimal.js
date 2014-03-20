@@ -18,10 +18,7 @@
 */
 var _ = require('underscore');
 var utils = require('./utils.js');
-
-var databaseUrl = "mydb"; // "username:password@example.com/mydb"
-var collections = ["questions","a2"];
-var db = require("mongojs").connect(databaseUrl, collections);
+var mongo = require('./mongo.js');
 
 var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
 var COOKIE_QUESTIONNUMBER    = 'questionnumber';
@@ -31,12 +28,12 @@ var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 exports.animal = function(req, res) {
     console.log("app.get(/animal) " + utils.printCookies(req));
 
-    db.questions.count(function(error, nbDocs) {
+    mongo.db.questions.count(function(error, nbDocs) {
         // Do what you need the count for here.
         console.log(nbDocs);
         var q = [];
         var r = _.random(0,nbDocs);
-        db.questions.find({}).skip(r).limit(10, function(err, docs)
+        mongo.db.questions.find({}).skip(r).limit(10, function(err, docs)
         {
             console.log(docs);
             for (var i = 0; i < docs.length; i++) {
@@ -44,7 +41,7 @@ exports.animal = function(req, res) {
                 q.push(docs[i].q);
             }
 
-            db.a2.aggregate(
+            mongo.db.a2.aggregate(
                         [
                             { $unwind : "$positives"},
                             { $group : {_id : "$positives" , number : { $sum : 1 } } },
@@ -63,7 +60,7 @@ exports.animal = function(req, res) {
                                 console.log(docs[i]._id);
                                 q.push(docs[i]._id);
                             }
-                            db.a2.aggregate(
+                            mongo.db.a2.aggregate(
                                         [
                                             { $unwind : "$negatives"},
                                             { $group : {_id : "$negatives" , number : { $sum : 1 } } },
@@ -127,6 +124,6 @@ exports.postAnimal = function(req, res) {
     animal.negatives = _.uniq(animal.negatives);
     console.log(animal);
 
-    db.a2.insert(animal);
+    mongo.db.a2.insert(animal);
     res.redirect('/');
 };

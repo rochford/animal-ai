@@ -18,21 +18,19 @@
 */
 var _ = require('underscore');
 var utils = require('./utils.js');
-
-var databaseUrl = "mydb"; // "username:password@example.com/mydb"
-var collections = ["questions","a2"];
-var db = require("mongojs").connect(databaseUrl, collections);
+var mongo = require('./mongo.js');
 
 var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
 var COOKIE_QUESTIONNUMBER    = 'questionnumber';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
-exports.reset = function(req, res) {
-    console.log("app.get(/reset) " + utils.printCookies(req));
+exports.about = function(req, res){
+    console.log("app.get(/about) " + utils.printCookies(req));
+    utils.clearCookies(res);
+    utils.resetCookies(res);
 
-    utils.resetDb(db);
-    res.redirect('/');
+    res.render('about', { pageTitle: 'About' });
 };
 
 exports.lost = function(req, res){
@@ -47,7 +45,7 @@ exports.index =  function(req, res){
     console.log("app.get(/index) " + utils.printCookies(req));
     utils.clearCookies(res);
     utils.resetCookies(res);
-    db.a2.find({}, function(err, animals) {
+    mongo.db.a2.find({}, function(err, animals) {
         var count = 0;
         count = animals.length;
         res.render('index', { pageTitle: 'Welcome', numberAnimals: count });

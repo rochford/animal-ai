@@ -28,13 +28,25 @@ var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 exports.animal = function(req, res) {
     console.log("app.get(/animal) " + utils.printCookies(req));
 
-    mongo.db.questions.count(function(error, nbDocs) {
+    mongo.db.questions.count(function(err, nbDocs) {
+        if (err || !nbDocs || nbDocs.length == 0) {
+            res.render('error', { pageTitle: 'Error',
+                           errorReason: 'Could not connect to database' });
+            return;
+        }
+
         // Do what you need the count for here.
         console.log(nbDocs);
         var q = [];
         var r = _.random(0,nbDocs);
         mongo.db.questions.find({}).skip(r).limit(10, function(err, docs)
         {
+            if (err || !docs || docs.length == 0) {
+                res.render('error', { pageTitle: 'Error',
+                               errorReason: 'Could not connect to database' });
+                return;
+            }
+
             console.log(docs);
             for (var i = 0; i < docs.length; i++) {
                 console.log(docs[i]._id);
@@ -125,5 +137,11 @@ exports.postAnimal = function(req, res) {
     console.log(animal);
 
     mongo.db.a2.insert(animal);
+
+    utils.forceRefresh(res);
+
+    utils.forceRefresh(res);
     res.redirect('/');
 };
+
+

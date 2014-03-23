@@ -51,14 +51,15 @@ app.configure('development', function(){
 
 app.get('/', index.index);
 app.get('/about', index.about);
-app.get('/lost', index.lost);
+app.get('/error', index.error);
 
+app.get('/game', game.game);
+app.get('/lost', game.lost);
 app.get('/yes', game.yes);
 app.get('/no', game.no);
 
 app.get('/guessyes', guess.guessyes);
 app.get('/guessno', guess.guessno);
-
 app.get('/guess', guess.guess);
 
 app.get('/question', addquestion.question);
@@ -66,8 +67,6 @@ app.post('/question', addquestion.postQuestion);
 
 app.get('/animal', addanimal.animal);
 app.post('/animal', addanimal.postAnimal);
-
-app.get('/game', game.game);
 
 mongo.init(function (error) {
     if (error)

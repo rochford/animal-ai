@@ -33,22 +33,40 @@ exports.about = function(req, res){
     res.render('about', { pageTitle: 'About' });
 };
 
-exports.lost = function(req, res){
-    console.log("app.get(/start) " + utils.printCookies(req));
+exports.error = function(req, res){
+    console.log("app.get(/error) " + utils.printCookies(req));
     utils.clearCookies(res);
     utils.resetCookies(res);
 
-    res.render('lost', { pageTitle: 'Lost' });
+    res.render('error', { pageTitle: 'Error' });
 };
 
 exports.index =  function(req, res){
-    console.log("app.get(/index) " + utils.printCookies(req));
+    console.log("app.get(/index) ");
+    utils.printCookies(req);
     utils.clearCookies(res);
     utils.resetCookies(res);
     mongo.db.a2.find({}, function(err, animals) {
-        var count = 0;
-        count = animals.length;
-        res.render('index', { pageTitle: 'Welcome', numberAnimals: count });
+        if (err || !animals || animals.length == 0) {
+            res.render('error', { pageTitle: 'Error',
+                           errorReason: 'Could not connect to database' });
+            return;
+        }
+
+        var count = animals.length;
+
+        mongo.db.questions.find({}, function(err, q) {
+            if (err || !q || q.length == 0) {
+                res.render('error', { pageTitle: 'Error',
+                               errorReason: 'Could not connect to database' });
+                return;
+            }
+            var qCount = q.length;
+
+            res.render('index', { pageTitle: 'Welcome',
+                           numberAnimals: count,
+                           numberQuestions: qCount});
+        });
     });
 }
 

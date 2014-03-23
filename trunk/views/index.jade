@@ -1,15 +1,37 @@
 doctype html
 html
-		include includes/header
-		body
-			include includes/topbar
-			div.container
-				div.hero-unit
-					h2 Think of an animal. Computer ask questions to guess the animal
-					div.row
-							div.span12
-								span.label Number of animals #{numberAnimals}
-					div.row
-							div.span12
-								a(href='/game') Play Game
+	include includes/header
+	body
+		include includes/topbar
+		div.container-fluid
+			div.hero-unit
+				div.row
+					div.span3
+						img(src= "/images/elephant.png")
+					div.span3
+						img(src= "/images/rhino.png" class="visible-desktop")
+					div.span3
+						img(src= "/images/cat.png" class="visible-tablet visible-desktop")
+				div.row
+					div.span12
+						h4 Think of an animal, Animal AI will then ask questions to guess the animal.
+				div.row
+					div.span6.offset3
+						a(class="btn btn-primary btn-lg" href='/game') Play Game
+		div.row
+			div.container-fluid
+				div.span6
+					div.hero-unit
+						a(class="btn btn-primary btn-lg" href='/animal') Add Animal
+						h4
+							p.label.label-info Number of animals #{numberAnimals}.
+							p Add an animal to the system.
+				div.span6
+					div.hero-unit
+						a(class="btn btn-primary btn-lg" href='/question') Add Question
+						h3
+							p.label.label-info Number of questions #{numberQuestions}.
+						h4
+							p Help make the webserver more intelligent by adding a question.
+
 	include includes/footer

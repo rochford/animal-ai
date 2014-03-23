@@ -3,9 +3,19 @@ html
 	include includes/header
 	body
 		include includes/topbar
+
 		div.container
 				div.content
 					div.hero-unit
-						XXX TODO
+						div.row
+								div.span12
+									p Unknown animal
+									- if (qAndAValue.length)
+										each x in qAndAValue
+											div.span12
+												p #{x.question}, #{x.answer}
+						div.row
+							div.span6.offset3
+								a(class="btn btn-primary btn-lg" href='/animal') Add Animal
 
 include includes/footer

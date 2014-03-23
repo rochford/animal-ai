@@ -7,7 +7,7 @@ html
 			div.hero-unit
 				div.row
 					div.span12
-						h3 Think of an animal. WebServer will ask questions to guess the animal.
+						h3 Think of an animal. Animal AI will ask questions to guess the animal.
 				// Carousel
 				#myCarousel.carousel.slide(data-ride="carousel")
 					// Indicators
@@ -18,24 +18,22 @@ html
 					// Wrapper for slides
 					.carousel-inner
 						.item.active
-							img(height="100" src="images/elephant.png" alt="elephant")
+							img(src="images/elephant.png" alt="elephant")
 							.container
 								.carousel-caption
 									p Is it considered intelligent?
 						.item
-							img(height="100" src="images/rhino.png" alt="rhino")
+							img(src="images/rhino.png" alt="rhino")
 							.container
 								.carousel-caption
 									p Can you see it in a zoo?
 						.item
-							img(height="100" src="images/cat.png" alt="cat")
+							img(src="images/cat.png" alt="cat")
 							.container
 								.carousel-caption
 									p Is it domesticated?
-					a.left.carousel-control(href="#myCarousel" data-slide="prev")
-						span.glyphicon.glyphicon-chevron-left
-					a.right.carousel-control(href="#myCarousel" data-slide="next")
-						span.glyphicon.glyphicon-chevron-right
+					a.left.carousel-control(href="#myCarousel" data-slide="prev") &lsaquo;
+					a.right.carousel-control(href="#myCarousel" data-slide="next") &rsaquo;
 				div.row
 					div.span6.offset3
 						a(class="btn btn-primary btn-lg" href='/game') Play Game
@@ -45,14 +43,14 @@ html
 					div.hero-unit
 						a(class="btn btn-primary btn-lg" href='/animal') Add Animal
 						h4
-							p.label.label-info Number of animals #{numberAnimals}.
-							p Add an animal to the system.
+							p.label.label-info Number of animals #{numberAnimals}
+							p Help improve Animal AI by adding an animal.
 				div.span6
 					div.hero-unit
 						a(class="btn btn-primary btn-lg" href='/question') Add Question
 						h3
-							p.label.label-info Number of questions #{numberQuestions}.
+							p.label.label-info Number of questions #{numberQuestions}
 						h4
-							p Help make the webserver more intelligent by adding a question.
+							p Help improve Animal AI by adding a question.
 
 	include includes/footer

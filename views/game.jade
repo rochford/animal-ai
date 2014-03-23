@@ -8,17 +8,21 @@ html
 				div.content
 					div.hero-unit
 						div.row
-								div.span4
-									p Question Number #{questionNumber}
-									- if (qAndA.length)
-										each x in qAndA
-											div.span8
-												p #{x.question}, #{x.answer}
-								div.span8
-									p #{question}
-										div.row
-											div.span4
-												a(href='/yes') Yes
-											div.span4
-												a(href='/no') No
+								div.span12
+									p.label.label-important Question Number #{questionNumber}
+									- if (qAndAValue.length)
+										each x in qAndAValue
+											div.row
+												div.span3
+													em.label #{x.question}
+												div.span1
+													em.label.label-info #{x.answer}
+						div.row
+							div.span12
+								p #{question}
+									div.row
+										div.span4
+											a(href='/yes') Yes
+										div.span4
+											a(href='/no') No
 include includes/footer

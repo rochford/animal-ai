@@ -8,12 +8,10 @@ html
 				div.content
 					div.hero-unit
 						div.row
-								div.span4
-									span.label My guess is...
-									div.span4
-										span.label= guess
-											div.row
-												div.span4
-													a(href='/guessyes') Yes
-													a(href='/guessno') No
+							h3 My guess is...
+								h2 #{guess}
+									div.row
+										div.span4
+											a(href='/guessyes') Yes
+											a(href='/guessno') No
 include includes/footer

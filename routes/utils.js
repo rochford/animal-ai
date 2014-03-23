@@ -28,6 +28,11 @@ exports.printCookies = function printCookies(req) {
     console.log("COOKIE - CURRENT QUESTON: " + req.cookies.currentquestion);
 }
 
+exports.forceRefresh = function forceRefresh(res) {
+    res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.header("Pragma", "no-cache");
+    res.header("Expires", 0);
+}
 
 exports.clearCookies = function clearCookies(res) {
     res.clearCookie(COOKIE_QUESTIONNUMBER);

@@ -25,6 +25,16 @@ var COOKIE_QUESTIONNUMBER    = 'questionnumber';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
+var MAX_QUESTION_LENGTH = 60;
+
+function parseQuestion(q) {
+
+    if (q.length > MAX_QUESTION_LENGTH)
+        return "Too long";
+    if (q.indexOf('?') === -1)
+        return "No question mark";
+    return "";
+}
 
 exports.question = function(req, res) {
     console.log("app.get(/question) " + utils.printCookies(req));
@@ -35,7 +45,15 @@ exports.question = function(req, res) {
 exports.postQuestion = function(req, res) {
     console.log(utils.printCookies(req));
 
+    var err = parseQuestion(req.body.newquestion);
+    if (err) {
+        res.render('error', { pageTitle: 'Error',
+                       errorReason: 'Bad question: ' + err });
+        return;
+    }
+
     mongo.db.questions.insert( { q: req.body.newquestion});
 
+    utils.forceRefresh(res);
     res.redirect('/');
 };

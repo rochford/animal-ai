@@ -45,6 +45,7 @@ exports.guessyes = function(req, res){
     mongo.db.a2.find({ name: req.cookies.guess }, function(err, animal) {
         if( err || !animal) {
             console.log("No animal found to update ");
+            utils.forceRefresh(res);
             res.redirect('/');
             return;
         }
@@ -61,6 +62,8 @@ exports.guessyes = function(req, res){
         }
         console.log(animal[0]);
         mongo.db.a2.update({ name: req.cookies.guess }, animal[0], {multi:false},function() {
+            utils.forceRefresh(res);
+
             res.redirect('/');
         });
     });
@@ -69,7 +72,7 @@ exports.guessyes = function(req, res){
 
 
 exports.guessno = function(req, res){
-    console.log("guessno" + utils.printCookies(req));
-
-    res.redirect('/animal');
+    console.log("guessno", utils.printCookies(req));
+    utils.forceRefresh(res);
+    res.redirect('/lost');
 };

@@ -8,13 +8,14 @@ html
 			div.content
 					div.row
 						div.span4
-							span.label= pageTitle
+							h2 #{pageTitle}
+							h3 Add a question to the webserver. Add good question will be applicable to many animal species and will have a 'Yes' or 'No' answer. Remember to put a question mark ('?') at the end.
 							form(method='post',action='/question')
-							div.row
-								div.span4
-									input(name='newquestion',type='text')
 								div.row
 									div.span4
-										input(name='submit',type='submit').submit-button
+										input(name='newquestion',type='text')
+									div.row
+										div.span4
+											input(name='submit',type='submit').submit-button
 
 include includes/footer

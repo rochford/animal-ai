@@ -6,15 +6,36 @@ html
 		div.container-fluid
 			div.hero-unit
 				div.row
-					div.span3
-						img(src= "/images/elephant.png")
-					div.span3
-						img(src= "/images/rhino.png" class="visible-desktop")
-					div.span3
-						img(src= "/images/cat.png" class="visible-tablet visible-desktop")
-				div.row
 					div.span12
-						h4 Think of an animal, Animal AI will then ask questions to guess the animal.
+						h3 Think of an animal. WebServer will ask questions to guess the animal.
+				// Carousel
+				#myCarousel.carousel.slide(data-ride="carousel")
+					// Indicators
+					ol.carousel-indicators
+						li.active(data-target="#myCarousel" data-slite-to="0")
+						li(data-target="#myCarousel" data-slite-to="1")
+						li(data-target="#myCarousel" data-slite-to="2")
+					// Wrapper for slides
+					.carousel-inner
+						.item.active
+							img(height="100" src="images/elephant.png" alt="elephant")
+							.container
+								.carousel-caption
+									p Is it considered intelligent?
+						.item
+							img(height="100" src="images/rhino.png" alt="rhino")
+							.container
+								.carousel-caption
+									p Can you see it in a zoo?
+						.item
+							img(height="100" src="images/cat.png" alt="cat")
+							.container
+								.carousel-caption
+									p Is it domesticated?
+					a.left.carousel-control(href="#myCarousel" data-slide="prev")
+						span.glyphicon.glyphicon-chevron-left
+					a.right.carousel-control(href="#myCarousel" data-slide="next")
+						span.glyphicon.glyphicon-chevron-right
 				div.row
 					div.span6.offset3
 						a(class="btn btn-primary btn-lg" href='/game') Play Game

@@ -4,14 +4,15 @@ html
 	body
 		include includes/topbar
 
-		div.container
+		div.container-fluid
 				div.content
 					div.hero-unit
 						div.row
-							h3 My guess is...
+							h3 Animal AI thinks the animal is...
 								h2 #{guess}
 									div.row
 										div.span4
-											a(href='/guessyes') Yes
-											a(href='/guessno') No
+											a(href='/guessyes') Correct
+											p 
+											a(href='/guessno') Incorrect
 include includes/footer

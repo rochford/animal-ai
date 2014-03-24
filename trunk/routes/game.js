@@ -25,57 +25,11 @@ var COOKIE_QUESTIONNUMBER    = 'questionnumber';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
-exports.lost = function(req, res) {
-    console.log("lost ");
-    utils.printCookies(req);
+function getQandA(req) {
     var data = req.cookies.questionsanswers;
 
-    var qAndA = utils.getQuestionsAndAnswers(data);
-
-    utils.forceRefresh(res);
-    res.render('lost', { pageTitle: 'Unknown Animal',
-                   qAndAValue: qAndA});
-};
-
-exports.game = function(req, res) {
-    console.log("game ");
-    utils.printCookies(req);
-    var questionnumber = Number(req.cookies.questionnumber);
-
-    utils.forceRefresh(res);
-    nextQuestion(req, res);
-};
-
-exports.yes = function(req, res){
-    console.log("yes");
-    utils.printCookies(req);
-
-    res.cookie('questionsanswers', req.cookies.questionsanswers +
-               req.cookies.currentquestion + '=yes&', { });
-    res.clearCookie(COOKIE_CURRENT_QUESTION);
-
-    res.redirect('/game');
-};
-
-exports.no = function(req, res){
-    console.log("no");
-    utils.printCookies(req);
-
-    res.cookie('questionsanswers', req.cookies.questionsanswers +
-               req.cookies.currentquestion + '=no&', { });
-    res.clearCookie(COOKIE_CURRENT_QUESTION);
-
-    res.redirect('/game');
-};
-
-
-function nextQuestion(req, res) {
     var yesQ = [];
     var noQ = [];
-
-    var questionnumber = Number(req.cookies.questionnumber);
-    var data = req.cookies.questionsanswers;
-
     var qAndA = utils.getQuestionsAndAnswers(data);
     for (var i = 0; i < qAndA.length; i++) {
         if (qAndA[i].answer  === 'yes')
@@ -83,8 +37,10 @@ function nextQuestion(req, res) {
         else if (qAndA[i].answer === 'no')
             noQ.push(qAndA[i].question);
     }
+    return [qAndA, yesQ, noQ];
+}
 
-    console.log(qAndA);
+function getQuery(yesQ, noQ) {
     var query = {
         positives : { $all : yesQ},
         negatives : { $all : noQ } };
@@ -94,30 +50,56 @@ function nextQuestion(req, res) {
         query = {positives : { $all : yesQ}};
     else if (!yesQ.length && noQ.length)
         query = {negatives : { $all : noQ } };
+    
+    return query;
+}
+
+function redirect(res, page) {
+    utils.forceRefresh(res);
+    res.redirect(page);
+}
+
+function render(res, questionnumber, question, qAndA) {
+    utils.forceRefresh(res);
+    res.render('game', { pageTitle: 'Game in Progress',
+                   questionNumber: questionnumber,
+                   question: question,
+                   qAndAValue: qAndA});
+}
+
+function nextQuestion(collection, 
+                      req, 
+                      res, 
+                      redirectCB,
+                      renderCB)
+{
+    var yesNoArray = getQandA(req);
+    var qAndA = yesNoArray[0];
+    var yesQ = yesNoArray[1];
+    var noQ = yesNoArray[2];
+
+    var questionnumber = Number(req.cookies.questionnumber);
+
+    var query = getQuery(yesQ, noQ);
 
     console.log(query);
-
-    mongo.db.a2.find(query, function(err, animal) {
+    
+    collection.find(query, function(err, animal) {
         if( err || !animal) {
             console.log("No animal found to update ");
             console.log("Single animal found");
             console.log(animal);
-            utils.forceRefresh(res);
-            res.redirect('/animal');
-            return;
+            redirectCB(res, '/animal');
         } else if (animal.length === 1) {
             console.log("Single animal found");
             console.log(animal);
             console.log("SINGLE RESULT");
             res.clearCookie(COOKIE_GUESS);
             res.cookie(COOKIE_GUESS, animal[0].name, { });
-            utils.forceRefresh(res);
-            res.redirect('/guess');
-
-            return;
+            redirectCB(res, '/guess');
         } else {
-            // console.log(animal);
-            mongo.db.a2.aggregate(
+            console.log(animal);
+            collection.aggregate(
                         [
                             { $match : query},
                             { $unwind : "$positives"},
@@ -126,8 +108,7 @@ function nextQuestion(req, res) {
                             { $limit : 20 },
                         ], function(err, pos_result) {
 
-                            // console.log("XXX 2");
-                            mongo.db.a2.aggregate(
+                            collection.aggregate(
                                         [
                                             { $match : query},
                                             { $unwind : "$negatives"},
@@ -136,8 +117,8 @@ function nextQuestion(req, res) {
                                             { $limit : 20 },
                                         ], function(err, neg_result) {
 
-                                            // console.log(pos_result);
-                                            // console.log(neg_result);
+                                            console.log(pos_result);
+                                            console.log(neg_result);
                                             var pos = [];
                                             for (var i = 0; i < pos_result.length; i++) {
                                                 if (!_.contains(yesQ, pos_result[i]._id))
@@ -165,22 +146,64 @@ function nextQuestion(req, res) {
                                             res.clearCookie(COOKIE_CURRENT_QUESTION);
                                             res.cookie(COOKIE_CURRENT_QUESTION, question, { });
 
-                                            // console.log("XXX 5: question", question);
                                             console.log(result);
                                             if (!question) {
-                                                utils.forceRefresh(res);
-                                                res.redirect('/lost');
-                                                return;
+                                                redirectCB(res, '/lost');
                                             }
 
                                             res.cookie(COOKIE_QUESTIONNUMBER, questionnumber + 1, { });
 
-                                            res.render('game', { pageTitle: 'Game in Progress',
-                                                           questionNumber: questionnumber,
-                                                           question: question,
-                                                           qAndAValue: qAndA});
+                                            renderCB(res, questionnumber, question, qAndA);
                                         })
                         })
         }
     }
     )};
+
+exports.nextQuestion = nextQuestion;
+
+
+exports.lost = function(req, res) {
+    console.log("lost ");
+    utils.printCookies(req);
+    var data = req.cookies.questionsanswers;
+
+    var qAndA = utils.getQuestionsAndAnswers(data);
+
+    utils.forceRefresh(res);
+    res.render('lost', { pageTitle: 'Unknown Animal',
+                   qAndAValue: qAndA});
+};
+
+exports.game = function(req, res) {
+    console.log("game ");
+    utils.printCookies(req);
+    var questionnumber = Number(req.cookies.questionnumber);
+
+    utils.forceRefresh(res);
+    
+    nextQuestion(mongo.db.a2, req, res, redirect, render);
+};
+
+exports.yes = function(req, res){
+    console.log("yes");
+    utils.printCookies(req);
+
+    res.cookie('questionsanswers', req.cookies.questionsanswers +
+               req.cookies.currentquestion + '=yes&', { });
+    res.clearCookie(COOKIE_CURRENT_QUESTION);
+
+    res.redirect('/game');
+};
+
+exports.no = function(req, res){
+    console.log("no");
+    utils.printCookies(req);
+
+    res.cookie('questionsanswers', req.cookies.questionsanswers +
+               req.cookies.currentquestion + '=no&', { });
+    res.clearCookie(COOKIE_CURRENT_QUESTION);
+
+    res.redirect('/game');
+};
+

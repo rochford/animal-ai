@@ -60,6 +60,10 @@ exports.guessyes = function(req, res){
             else if (tmp[1] === 'no')
                 animal[0].negatives.push(q);
         }
+        // remove duplicates
+        animal[0].negatives = _.uniq(animal[0].negatives);
+        animal[0].positives = _.uniq(animal[0].positives);
+        
         console.log(animal[0]);
         mongo.db.a2.update({ name: req.cookies.guess }, animal[0], {multi:false},function() {
             utils.forceRefresh(res);

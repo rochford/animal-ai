@@ -4,39 +4,40 @@ html
 	body
 		include includes/topbar
 		div.container-fluid
-			div.hero-unit
-				div.row
-					div.span12
-						h3 Think of an animal. Animal AI will ask questions to guess the animal.
-				// Carousel
-				#myCarousel.carousel.slide(data-ride="carousel")
-					// Indicators
-					ol.carousel-indicators
-						li.active(data-target="#myCarousel" data-slite-to="0")
-						li(data-target="#myCarousel" data-slite-to="1")
-						li(data-target="#myCarousel" data-slite-to="2")
-					// Wrapper for slides
-					.carousel-inner
-						.item.active
-							img(src="images/elephant.png" alt="elephant")
-							.container
-								.carousel-caption
-									p Is it considered intelligent?
-						.item
-							img(src="images/rhino.png" alt="rhino")
-							.container
-								.carousel-caption
-									p Can you see it in a zoo?
-						.item
-							img(src="images/cat.png" alt="cat")
-							.container
-								.carousel-caption
-									p Is it domesticated?
-					a.left.carousel-control(href="#myCarousel" data-slide="prev") &lsaquo;
-					a.right.carousel-control(href="#myCarousel" data-slide="next") &rsaquo;
-				div.row
-					div.span6.offset3
-						a(class="btn btn-primary btn-lg" href='/game') Play Game
+			// Carousel
+			#myCarousel.carousel.slide(data-ride="carousel")
+				// Indicators
+				ol.carousel-indicators
+					li.active(data-target="#myCarousel" data-slite-to="0")
+					li(data-target="#myCarousel" data-slite-to="1")
+					li(data-target="#myCarousel" data-slite-to="2")
+				// Wrapper for slides
+				.carousel-inner
+					.item.active
+						img(src="images/elephant.png" alt="elephant")
+						.container
+							.carousel-caption
+								p Is it considered intelligent?
+					.item
+						img(src="images/rhino.png" alt="rhino")
+						.container
+							.carousel-caption
+								p Can you see it in a zoo?
+					.item
+						img(src="images/cat.png" alt="cat")
+						.container
+							.carousel-caption
+								p Is it domesticated?
+				a.left.carousel-control(href="#myCarousel" data-slide="prev") &lsaquo;
+				a.right.carousel-control(href="#myCarousel" data-slide="next") &rsaquo;
+
+		div.hero-unit
+			div.row
+				div.span12
+					h3 Think of an animal. Animal AI will ask questions to guess the animal.
+			div.row
+				div.span12.offset5
+					a(class="btn btn-primary btn-lg" href='/game') Play Game
 		div.row
 			div.container-fluid
 				div.span6

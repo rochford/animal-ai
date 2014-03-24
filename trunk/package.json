@@ -1,9 +1,12 @@
 {
   "name": "animal-ai",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "start": "node app"
+  },
+  "devDependencies": {
+      "nodeunit": "0.8.6",
   },
   "dependencies": {
     "express": "3.0.6",

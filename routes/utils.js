@@ -21,6 +21,11 @@ var COOKIE_QUESTIONNUMBER    = 'questionnumber';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
+exports.COOKIE_QUESTIONSANSWERS = COOKIE_QUESTIONSANSWERS;
+exports.COOKIE_QUESTIONNUMBER = COOKIE_QUESTIONNUMBER;
+exports.COOKIE_GUESS = COOKIE_GUESS;
+exports.COOKIE_CURRENT_QUESTION = COOKIE_CURRENT_QUESTION;
+
 exports.printCookies = function printCookies(req) {
     console.log("COOKIE - QUESTIONS: " + req.cookies.questionsanswers);
     console.log("COOKIE - GUESS: " + req.cookies.guess);

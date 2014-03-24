@@ -1,6 +1,11 @@
-# nicer jade pages
 # need to get more data about animals when only have 1 in result set
+# no cookies error page
 # restrict input to be lowercase and remove bad characters
 # startup check to ensure all animals are unique
 # rethink callbacks
 # when answer no to a guess, update the animal with the known properties.
+# change bootstrap colour scheme
+# jade layout changes
+# remove questions already asked when adding an animal
+# somehow list existing animals.
+# report incorrect postive/negative values for an animal?

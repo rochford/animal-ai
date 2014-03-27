@@ -9,11 +9,17 @@ html
 					div.hero-unit
 						div.row
 								div.span12
-									p Unknown animal
+									p Animal AI does not know the animal
 									- if (qAndAValue.length)
 										each x in qAndAValue
-											div.span12
-												p #{x.question}, #{x.answer}
+											div.row
+												div.span3
+													em.label #{x.question}
+												div.span1
+													em.label.label-info #{x.answer}
+						div.row
+							div.span12
+								p Make Animal AI more intelligent by adding the animal
 						div.row
 							div.span6.offset3
 								a(class="btn btn-primary btn-lg" href='/animal') Add Animal

@@ -90,6 +90,7 @@ function nextQuestion(collection,
             console.log("Single animal found");
             console.log(animal);
             redirectCB(res, '/animal');
+            return;
         } else if (animal.length === 1) {
             console.log("Single animal found");
             console.log(animal);
@@ -97,6 +98,7 @@ function nextQuestion(collection,
             res.clearCookie(COOKIE_GUESS);
             res.cookie(COOKIE_GUESS, animal[0].name, { });
             redirectCB(res, '/guess');
+            return;
         } else {
             console.log(animal);
             collection.aggregate(
@@ -149,6 +151,7 @@ function nextQuestion(collection,
                                             console.log(result);
                                             if (!question) {
                                                 redirectCB(res, '/lost');
+                                                return;
                                             }
 
                                             res.cookie(COOKIE_QUESTIONNUMBER, questionnumber + 1, { });

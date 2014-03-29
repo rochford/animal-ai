@@ -30,7 +30,7 @@ exports.animal = function(req, res) {
     utils.printCookies(req);
     
     mongo.db.questions.count(function(err, nbDocs) {
-        if (err || !nbDocs || nbDocs.length == 0) {
+        if (err || !nbDocs || nbDocs.length === 0) {
             res.render('error', { pageTitle: 'Error',
                            errorReason: 'Could not connect to database' });
         }
@@ -51,9 +51,8 @@ exports.animal = function(req, res) {
         };
         
         // Do what you need the count for here.
-        console.log(nbDocs);
         var q = [];
-        var r = _.random(0,nbDocs.length);
+        var r = _.random(0,nbDocs);
         mongo.db.questions.find({ q: {$nin : alreadyAsked }}).skip(r).limit(10, function(err, docs)
         {
             if (err || !docs || docs.length == 0) {
@@ -62,7 +61,6 @@ exports.animal = function(req, res) {
                 return;
             }
             
-            console.log(docs);
             for (var i = 0; i < docs.length; i++) {
                 console.log(docs[i]._id);
                 q.push(docs[i].q);
@@ -73,9 +71,16 @@ exports.animal = function(req, res) {
     });
 }
 
-exports.postAnimal = function(req, res) {
-    console.log(req.body);
-    
+function redirect(res, page) {
+    utils.forceRefresh(res);
+    res.redirect(page);
+}
+
+function updateAnimal(collection, 
+                      req, 
+                      res,
+                      redirectCB)
+{
     var animal = { name: req.body.name,
         positives: [],
         negatives: []};
@@ -115,14 +120,37 @@ exports.postAnimal = function(req, res) {
     // remove duplicates
     animal.positives = _.uniq(animal.positives);
     animal.negatives = _.uniq(animal.negatives);
-    console.log(animal);
+
+    collection.find( { name: req.body.name}, function(err, docs) {
+
+        if( err || !docs || docs.length === 0) {
+            console.log("No animal found to update ");
+            mongo.db.a2.insert(animal);
+        } else if (docs.length === 1) {
+            console.log("Single animal found");
+            
+            for (var i = 0; i < animal.positives.length; i++) {            
+                docs[0].positives.push(animal.positives[i]);
+            }
+            for (var i = 0; i < animal.negatives.length; i++) {            
+                docs[0].negatives.push(animal.negatives[i]);
+            }
+
+            docs[0].positives = _.uniq(docs[0].positives);
+            docs[0].negatives = _.uniq(docs[0].negatives);
+
+            collection.update({ name: req.body.name}, docs[0], { upsert: true });
+        }
+
+        redirectCB(res, '/');
+        return;
+        });
+}
+
+exports.postAnimal = function(req, res) {
+    console.log(req.body);
     
-    mongo.db.a2.insert(animal);
-    
-    utils.forceRefresh(res);
-    
-    utils.forceRefresh(res);
-    res.redirect('/');
+    updateAnimal(mongo.db.a2, req, res, redirect);
 };
 
 

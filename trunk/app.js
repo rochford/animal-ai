@@ -72,6 +72,16 @@ mongo.init(function (error) {
     if (error)
         throw error;
 
+    if (!process.env.PORT ) {
+        console.error('No port defined');
+        return;
+    }
+
+    if (!process.env.COOKIE_SECRET ) {
+        console.error('No COOKIE_SECRET defined');
+        return;
+    }
+    
     http.createServer(app).listen(app.get('port'), function(){
         console.log("Express server listening on port " + app.get('port'));
     });

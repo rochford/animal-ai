@@ -1,6 +1,6 @@
 
 // module under test
-var game = require('./game');
+var game = require('./game.js');
 
 var _ = require('underscore');
 var utils = require('./utils.js');

@@ -81,6 +81,10 @@ mongo.init(function (error) {
         console.error('No COOKIE_SECRET defined');
         return;
     }
+    if (!process.env.MONGO_SERVER_URL ) {
+        console.error('No MONGO_SERVER_URL defined');
+        return;
+    }
     
     http.createServer(app).listen(app.get('port'), function(){
         console.log("Express server listening on port " + app.get('port'));

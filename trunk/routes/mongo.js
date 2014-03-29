@@ -19,7 +19,7 @@
 var mongodb = require('mongojs');
 
 module.exports.init = function (callback) {
-    var databaseUrl = "mydb"; // "username:password@example.com/mydb"
+    var databaseUrl = process.env.MONGO_SERVER_URL; // "username:password@example.com/mydb"
     var collections = ["questions","a2"];
     module.exports.db = require("mongojs").connect(databaseUrl, collections);
     callback();

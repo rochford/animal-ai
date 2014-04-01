@@ -63,7 +63,7 @@ exports.index =  function(req, res){
             }
             var qCount = q.length;
 
-            res.render('index', { pageTitle: 'Welcome',
+            res.render('index', { pageTitle: 'Animal Guess',
                            numberAnimals: count,
                            numberQuestions: qCount});
         });

@@ -1,7 +1,8 @@
-<script type="text/javascript">
 
-  var _gaq = _gaq || [];
+var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-49511544-1']);
+  _gaq.push(['_setDomainName', 'animalguess.com']);
+  _gaq.push(['_setAllowLinker', true]);
   _gaq.push(['_trackPageview']);
 
   (function() {
@@ -10,4 +11,3 @@
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 
-</script>

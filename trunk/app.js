@@ -34,6 +34,14 @@ app.configure(function(){
     app.set('port', process.env.PORT || 3000);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
+    app.use(function (req, res, next) {
+        if ('/robots.txt' == req.url) {
+            res.type('text/plain')
+            res.send("User-agent: *\nAllow: /\nDisallow: /css/\nDisallow: /lib/\nDisallow: /bootstrap/");
+        } else {
+            next();
+        }
+    });
     app.use(express.cookieParser(process.env.COOKIE_SECRET));
     app.use(express.urlencoded()); // to support URL-encoded bodies
     app.use(express.favicon());
@@ -42,8 +50,8 @@ app.configure(function(){
     app.use(express.methodOverride());
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
-
 });
+
 
 app.configure('development', function(){
     app.use(express.errorHandler());

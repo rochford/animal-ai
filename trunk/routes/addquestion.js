@@ -21,18 +21,20 @@ var utils = require('./utils.js');
 var mongo = require('./mongo.js');
 
 var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
-var COOKIE_QUESTIONNUMBER    = 'questionnumber';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
 var MAX_QUESTION_LENGTH = 60;
+var MIN_QUESTION_LENGTH = 5;
 
 function parseQuestion(q) {
 
     if (q.length > MAX_QUESTION_LENGTH)
-        return "Too long";
+        return "Question is too long";
     if (q.indexOf('?') === -1)
         return "No question mark";
+    if (q.length < -1)
+        return "Question is too short";
     return "";
 }
 
@@ -52,7 +54,7 @@ exports.postQuestion = function(req, res) {
         return;
     }
 
-    mongo.db.questions.insert( { q: req.body.newquestion});
+    mongo.db.questions.insert( { q: req.body.newquestion.toLowerCase()});
 
     utils.forceRefresh(res);
     res.redirect('/');

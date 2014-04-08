@@ -21,7 +21,6 @@ var utils = require('./utils.js');
 var mongo = require('./mongo.js');
 
 var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
-var COOKIE_QUESTIONNUMBER    = 'questionnumber';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
@@ -81,7 +80,7 @@ function updateAnimal(collection,
                       res,
                       redirectCB)
 {
-    var animal = { name: req.body.name,
+    var animal = { name: req.body.name.toLowerCase(),
         positives: [],
         negatives: []};
     var data = req.cookies.questionsanswers;
@@ -121,7 +120,7 @@ function updateAnimal(collection,
     animal.positives = _.uniq(animal.positives);
     animal.negatives = _.uniq(animal.negatives);
 
-    collection.find( { name: req.body.name}, function(err, docs) {
+    collection.find( { name: req.body.name.toLowerCase()}, function(err, docs) {
 
         if( err || !docs || docs.length === 0) {
             console.log("No animal found to update ");
@@ -139,7 +138,7 @@ function updateAnimal(collection,
             docs[0].positives = _.uniq(docs[0].positives);
             docs[0].negatives = _.uniq(docs[0].negatives);
 
-            collection.update({ name: req.body.name}, docs[0], { upsert: true });
+            collection.update({ name: req.body.name.toLowerCase()}, docs[0], { upsert: true });
         }
 
         redirectCB(res, '/');

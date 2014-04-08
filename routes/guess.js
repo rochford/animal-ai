@@ -21,28 +21,27 @@ var utils = require('./utils.js');
 var mongo = require('./mongo.js');
 
 var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
-var COOKIE_QUESTIONNUMBER    = 'questionnumber';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
 exports.guess = function(req, res) {
-    console.log("app.get(/guess) " + utils.printCookies(req));
+//    console.log("app.get(/guess) " + utils.printCookies(req));
     var questionnumber = Number(req.cookies.questionnumber);
 
-    res.cookie('questionnumber', questionnumber + 1, { });
+    res.cookie(utils.COOKIE_QUESTIONNUMBER, questionnumber + 1, { });
 
-    res.render('guess', { pageTitle: 'Guess', guess: req.cookies.guess });
+    res.render('guess', { pageTitle: 'Guess', guess: req.cookies.guess.toLowerCase() });
 };
 
-exports.guessyes = function(req, res){
-    console.log("guessyes" + utils.printCookies(req));
+exports.guessyes = function(req, res) {
+//    console.log("guessyes" + utils.printCookies(req));
 
     var data = req.cookies.questionsanswers;
 
     // update the db
     var numberOfQuestions = data.split("&");
     console.log("numberOfQuestions:" +  numberOfQuestions)
-    mongo.db.a2.find({ name: req.cookies.guess }, function(err, animal) {
+    mongo.db.a2.find({ name: req.cookies.guess.toLowerCase() }, function(err, animal) {
         if( err || !animal) {
             console.log("No animal found to update ");
             utils.forceRefresh(res);
@@ -64,8 +63,8 @@ exports.guessyes = function(req, res){
         animal[0].negatives = _.uniq(animal[0].negatives);
         animal[0].positives = _.uniq(animal[0].positives);
         
-        console.log(animal[0]);
-        mongo.db.a2.update({ name: req.cookies.guess }, animal[0], {multi:false},function() {
+//        console.log(animal[0]);
+        mongo.db.a2.update({ name: req.cookies.guess.toLowerCase() }, animal[0], {multi:false},function() {
             utils.forceRefresh(res);
 
             res.redirect('/');
@@ -75,8 +74,8 @@ exports.guessyes = function(req, res){
 };
 
 
-exports.guessno = function(req, res){
-    console.log("guessno", utils.printCookies(req));
+exports.guessno = function(req, res) {
+//    console.log("guessno", utils.printCookies(req));
     utils.forceRefresh(res);
     res.redirect('/lost');
 };

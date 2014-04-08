@@ -27,10 +27,12 @@ exports.COOKIE_GUESS = COOKIE_GUESS;
 exports.COOKIE_CURRENT_QUESTION = COOKIE_CURRENT_QUESTION;
 
 exports.printCookies = function printCookies(req) {
+    /*
     console.log("COOKIE - QUESTIONS: " + req.cookies.questionsanswers);
     console.log("COOKIE - GUESS: " + req.cookies.guess);
     console.log("COOKIE - QUESTIONNUMBER: " + req.cookies.questionnumber);
     console.log("COOKIE - CURRENT QUESTON: " + req.cookies.currentquestion);
+    */
 }
 
 exports.forceRefresh = function forceRefresh(res) {
@@ -48,7 +50,7 @@ exports.clearCookies = function clearCookies(res) {
 
 
 exports.resetCookies = function resetCookies(res) {
-    res.cookie(COOKIE_QUESTIONNUMBER, 0, { });
+    res.cookie(COOKIE_QUESTIONNUMBER, 1, { });
     res.cookie(COOKIE_GUESS, '', { });
     res.cookie(COOKIE_QUESTIONSANSWERS, '', { });
     res.cookie(COOKIE_CURRENT_QUESTION, '', { });

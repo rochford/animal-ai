@@ -21,7 +21,6 @@ var utils = require('./utils.js');
 var mongo = require('./mongo.js');
 
 var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
-var COOKIE_QUESTIONNUMBER    = 'questionnumber';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
@@ -100,7 +99,7 @@ function nextQuestion(collection,
             redirectCB(res, '/guess');
             return;
         } else {
-            console.log(animal);
+//            console.log(animal);
             collection.aggregate(
                         [
                             { $match : query},
@@ -119,14 +118,11 @@ function nextQuestion(collection,
                                             { $limit : 20 },
                                         ], function(err, neg_result) {
 
-                                            console.log(pos_result);
-                                            console.log(neg_result);
                                             var pos = [];
                                             for (var i = 0; i < pos_result.length; i++) {
                                                 if (!_.contains(yesQ, pos_result[i]._id))
                                                     pos.push( pos_result[i]._id );
                                             }
-                                            console.log(yesQ);
                                             pos = _.without(pos, yesQ);
 
                                             var neg = [];
@@ -135,8 +131,8 @@ function nextQuestion(collection,
                                                     neg.push( neg_result[i]._id );
                                             }
                                             neg = _.without(neg, noQ);
-                                            console.log(pos);
-                                            console.log(neg);
+//                                            console.log(pos);
+//                                            console.log(neg);
 
                                             var result = _.intersection(pos, neg);
                                             //result = _.without(res, yesQ, noQ);
@@ -148,13 +144,13 @@ function nextQuestion(collection,
                                             res.clearCookie(COOKIE_CURRENT_QUESTION);
                                             res.cookie(COOKIE_CURRENT_QUESTION, question, { });
 
-                                            console.log(result);
+//                                            console.log(result);
                                             if (!question) {
                                                 redirectCB(res, '/lost');
                                                 return;
                                             }
 
-                                            res.cookie(COOKIE_QUESTIONNUMBER, questionnumber + 1, { });
+                                            res.cookie(utils.COOKIE_QUESTIONNUMBER, questionnumber + 1, { });
 
                                             renderCB(res, questionnumber, question, qAndA);
                                         })
@@ -165,9 +161,7 @@ function nextQuestion(collection,
 
 exports.nextQuestion = nextQuestion;
 
-
 exports.lost = function(req, res) {
-    console.log("lost ");
     utils.printCookies(req);
     var data = req.cookies.questionsanswers;
 
@@ -179,7 +173,6 @@ exports.lost = function(req, res) {
 };
 
 exports.game = function(req, res) {
-    console.log("game ");
     utils.printCookies(req);
     var questionnumber = Number(req.cookies.questionnumber);
 
@@ -189,7 +182,6 @@ exports.game = function(req, res) {
 };
 
 exports.yes = function(req, res){
-    console.log("yes");
     utils.printCookies(req);
 
     res.cookie('questionsanswers', req.cookies.questionsanswers +
@@ -200,7 +192,6 @@ exports.yes = function(req, res){
 };
 
 exports.no = function(req, res){
-    console.log("no");
     utils.printCookies(req);
 
     res.cookie('questionsanswers', req.cookies.questionsanswers +

@@ -21,20 +21,19 @@ var utils = require('./utils.js');
 var mongo = require('./mongo.js');
 
 var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
-var COOKIE_QUESTIONNUMBER    = 'questionnumber';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
 exports.about = function(req, res){
-    console.log("app.get(/about) " + utils.printCookies(req));
+//    console.log("app.get(/about) " + utils.printCookies(req));
     utils.clearCookies(res);
     utils.resetCookies(res);
 
-    res.render('about', { pageTitle: 'About' });
+    res.render('about', { pageTitle: 'About AnimalGuess' });
 };
 
 exports.error = function(req, res){
-    console.log("app.get(/error) " + utils.printCookies(req));
+//    console.log("app.get(/error) " + utils.printCookies(req));
     utils.clearCookies(res);
     utils.resetCookies(res);
 
@@ -42,7 +41,7 @@ exports.error = function(req, res){
 };
 
 exports.index =  function(req, res){
-    console.log("app.get(/index) ");
+//    console.log("app.get(/index) ");
     utils.printCookies(req);
     utils.clearCookies(res);
     utils.resetCookies(res);

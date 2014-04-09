@@ -6,15 +6,13 @@ html
 
 		div.container-fluid
 			div.span12
-				div.hero-unit
-					h3 #{pageTitle}
+				div.jumbotron
+					legend #{pageTitle}
 					h4 Add a question to AnimalGuess. 
 					p Add good question will be applicable to many animal species and will have a 'Yes' or 'No' answer. 
-					p.label.label-warning Remember to put a question mark ('?') at the end.
+					label.label-warning Remember to put a question mark ('?') at the end.
 					form(method='post',action='/question')
-						div.row
-							div.span8
-								input(name='newquestion',type='text')
-								input(name='submit',type='submit').submit-button
+							input(name='newquestion',type='text')
+							input(name='submit',type='submit',class="btn btn-primary").submit-button
 
 include includes/footer

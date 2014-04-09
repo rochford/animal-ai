@@ -4,10 +4,14 @@ head
 	meta(name="description", content="Animal Guessing Game. Similar to 20 questions.")
 	meta(name="author", content="Tim Rochford")
 
-	link(rel='stylesheet', href='/lib/bootstrap/css/bootstrap.min.css')
-	link(rel='stylesheet', href='/lib/bootstrap/css/bootstrap-responsive.min.css')
+	link(href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css", rel="stylesheet")
+	link(href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css", rel="stylesheet")
+	//- use local version
+	//- link(href="/lib/bootstrap/css/bootstrap.min.css", rel="stylesheet")
+	//- use CDN version
+	link(href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/amelia/bootstrap.min.css", rel="stylesheet")
 	link(rel='stylesheet', href='/stylesheets/style.css')
 
 	script(type='text/javascript', src='/javascripts/jquery.min.js')
-	script(type='text/javascript', src='/lib/bootstrap/js/bootstrap.min.js')
+	script(type='text/javascript', src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js")
 	script(type='text/javascript', src='/javascripts/analytics.js')

@@ -14,43 +14,47 @@ html
 				// Wrapper for slides
 				.carousel-inner
 					.item.active
-						img(src="images/elephant.png" alt="animal guess game")
+						img(src="images/elephant.png" width="60%",  max-width="300px", alt="animal guess game 20 questions")
 						.container
 							.carousel-caption
-								p Is it considered intelligent?
+								.span6
+									label.label-info Is it considered intelligent?
+								label.label-success Yes
 					.item
-						img(src="images/rhino.png" alt="animal guess game")
+						img(src="images/rhino.png" width="60%",  max-width="300px",alt="animal guess game 20 questions")
 						.container
 							.carousel-caption
-								p Can you see it in a zoo?
+								.span6
+									label.label-info Does it live in Africa?
+								label.label-success Yes
 					.item
-						img(src="images/cat.png" alt="animal guess game")
+						img(src="images/cat.png" width="60%", max-width="300px", alt="animal guess game 20 questions")
 						.container
 							.carousel-caption
-								p Is it domesticated?
+								.span6
+									label.label-info Is it a pet?
+								label.label-success Yes
 				a.left.carousel-control(href="#myCarousel" data-slide="prev") &lsaquo;
 				a.right.carousel-control(href="#myCarousel" data-slide="next") &rsaquo;
 
-		div.hero-unit
-			div.row
-				h3 Think of an animal. AnimalGuess will ask questions to guess the animal.
-			div.row
-				div.span12.offset5
-					a(class="btn btn-primary btn-lg" href='/game') Play Game
+		div.jumbotron
+				h2 Think of an animal and play the game! 
+				h4 AnimalGuess will ask questions to guess the animal.
+				div.span12.text-center
+					a(class="btn btn-primary btn-lg" href='/game') Play
 		div.row
 			div.container-fluid
 				div.span6
-					div.hero-unit
+					div.jumbotron
 						a(class="btn btn-primary btn-lg" href='/animal') Add Animal
 						h4
-							p.label.label-info Number of animals #{numberAnimals}
+							label.label-info Number of animals #{numberAnimals}
 							p Help improve AnimalGuess by adding an animal.
 				div.span6
-					div.hero-unit
+					div.jumbotron
 						a(class="btn btn-primary btn-lg" href='/question') Add Question
-						h3
-							p.label.label-info Number of questions #{numberQuestions}
 						h4
+							label.label-info Number of questions #{numberQuestions}
 							p Help improve AnimalGuess by adding a question.
 
 	include includes/footer

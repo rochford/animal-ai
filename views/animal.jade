@@ -4,28 +4,27 @@ html
 	body
 		include includes/topbar
 		div.container
-			div.content
+			div.jumbotron
 					div.row
 						div.span12
-							h4 #{pageTitle}
 								div.row
-									form(method='post',action='/animal')
+									form(class="horizontal", method='post',action='/animal')
+										legend #{pageTitle}
 										div.span12
-											h5 Animal name
-											input(name='name',type='text')
+											label Animal name
+											input(name='name',type='text',placeholder="")
 											- if (qAndA.length)
-													each x in qAndA
-														div.row
-															div.span4
-																span.label= x
-															div.span4
-																input(name=x,type='radio',value='yes')
-																| Yes
-																input(name=x,type='radio',value='no')
-																| No
+													table.table-striped
+														each x in qAndA
+															tr
+																td= x
+																td
+																	input(name=x,type='radio',value='yes')
+																	| Yes
+																	input(name=x,type='radio',value='no')
+																	| No
 												div.row
-													div.span4
-														input(name='submit',type='submit').submit-button
+														input(name='submit',type='submit',class="btn btn-primary").submit-button
 
 include includes/footer
 

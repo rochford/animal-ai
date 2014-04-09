@@ -65,7 +65,7 @@ exports.animal = function(req, res) {
                 q.push(docs[i].q);
             }
             
-            res.render('animal', { pageTitle: 'Add animal' , qAndA: q });
+            res.render('animal', { pageTitle: 'Add Animal' , qAndA: q });
         });
     });
 }

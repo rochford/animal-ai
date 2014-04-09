@@ -1,14 +1,16 @@
-.navbar.navbar-fixed-top
-	.navbar-inner
-		.container-fluid
-			a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
-			a.brand(href="/") AnimalGuess
-			.nav-collapse
-				ul.nav
-					li
-						a(href="/animal") Add Animal
-					li
-						a(href="/question") Add Question
-					li
-						a(href="/about") About
+.navbar.navbar-inverse
+	.navbar-header
+		btn(type="button", class="navbar-toggle", data-toggle="collapse", data-target=".navbar-inverse-collapse")
+				span.icon-bar
+				span.icon-bar
+				span.icon-bar
+		a(class="navbar-brand", href="/") AnimalGuess
+	.navbar-collapse.collapse.navbar-inverse-collapse
+		ul.nav.navbar-nav
+			li
+				a(href="/animal") Add Animal
+			li
+				a(href="/question") Add Question
+			li
+				a(href="/about") About
 

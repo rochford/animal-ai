@@ -6,17 +6,18 @@ html
 
 		div.container
 				div.content
-					div.hero-unit
+					div.jumbotron
 						div.row
 								div.span12
 									p AnimalGuess does not know the animal
 									- if (qAndAValue.length)
-										each x in qAndAValue
-											div.row
-												div.span3
-													em.label #{x.question}
-												div.span1
-													em.label.label-info #{x.answer}
+										table.table-striped
+											each x in qAndAValue
+												tr
+													td
+														label #{x.question}
+													td
+														label.label-info #{x.answer}
 						div.row
 							div.span12
 								p Make AnimalGuess more intelligent by adding the animal

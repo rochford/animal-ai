@@ -37,7 +37,7 @@ app.configure(function(){
     app.use(function (req, res, next) {
         if ('/robots.txt' == req.url) {
             res.type('text/plain')
-            res.send("User-agent: *\nAllow: /\nDisallow: /css/\nDisallow: /lib/\nDisallow: /bootstrap/");
+            res.send("User-agent: *\nAllow: /\nDisallow: /css/\nDisallow: /lib/\nDisallow: /bootstrap/\nDisallow: /game\nDisallow: /animal\nDisallow: /question\nDisallow: /guess");
         } else {
             next();
         }

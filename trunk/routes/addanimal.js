@@ -54,7 +54,7 @@ exports.animal = function(req, res) {
         var r = _.random(0,nbDocs);
         mongo.db.questions.find({ q: {$nin : alreadyAsked }}).skip(r).limit(10, function(err, docs)
         {
-            if (err || !docs || docs.length == 0) {
+            if (err || !docs || docs.length === 0) {
                 res.render('error', { pageTitle: 'Error',
                                errorReason: 'Could not connect to database' });
                 return;
@@ -80,6 +80,12 @@ function updateAnimal(collection,
                       res,
                       redirectCB)
 {
+    if (!req.body.name.toLowerCase()) {
+        res.render('error', { pageTitle: 'Error',
+                       errorReason: 'No animal name submitted.' });
+        return;
+    }
+    
     var animal = { name: req.body.name.toLowerCase(),
         positives: [],
         negatives: []};

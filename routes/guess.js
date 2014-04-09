@@ -37,12 +37,18 @@ exports.guessyes = function(req, res) {
 //    console.log("guessyes" + utils.printCookies(req));
 
     var data = req.cookies.questionsanswers;
+    if (!data) {
+        utils.forceRefresh(res);
+        res.render('error', { pageTitle: 'Error',
+                       errorReason: 'Cannot guess as no questions answered' });
+        return;
+    }
 
     // update the db
     var numberOfQuestions = data.split("&");
     console.log("numberOfQuestions:" +  numberOfQuestions)
     mongo.db.a2.find({ name: req.cookies.guess.toLowerCase() }, function(err, animal) {
-        if( err || !animal) {
+        if( err || !animal || animal.length === 0) {
             console.log("No animal found to update ");
             utils.forceRefresh(res);
             res.redirect('/');

@@ -1,0 +1,9 @@
+mixin listQAndA(qAndAValue)
+	- if (qAndAValue.length)
+		table.table-striped
+			each x in qAndAValue
+				tr
+					td
+						label #{x.question}
+					td
+						label.label-info #{x.answer}

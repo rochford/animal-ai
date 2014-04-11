@@ -1,23 +1,16 @@
 doctype html
-html
+html(lang="en")
 	include includes/header
 	body
 		include includes/topbar
 
-		div.container
+		div.container-fluid
 				div.content
 					div.jumbotron
 						div.row
 								div.span12
 									p AnimalGuess does not know the animal
-									- if (qAndAValue.length)
-										table.table-striped
-											each x in qAndAValue
-												tr
-													td
-														label #{x.question}
-													td
-														label.label-info #{x.answer}
+									+listQAndA(qAndAValue)
 						div.row
 							div.span12
 								p Make AnimalGuess more intelligent by adding the animal

@@ -29,7 +29,7 @@ exports.about = function(req, res){
     utils.clearCookies(res);
     utils.resetCookies(res);
 
-    res.render('about', { pageTitle: 'About AnimalGuess' });
+    res.render('about', { path: req.path, pageTitle: 'About AnimalGuess' });
 };
 
 exports.error = function(req, res){
@@ -62,7 +62,8 @@ exports.index =  function(req, res){
             }
             var qCount = q.length;
 
-            res.render('index', { pageTitle: 'Animal Guess',
+            res.render('index', { path: req.path, 
+                           pageTitle: 'Animal Guess',
                            numberAnimals: count,
                            numberQuestions: qCount});
         });

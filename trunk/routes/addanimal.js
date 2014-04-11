@@ -114,7 +114,7 @@ function updateAnimal(collection,
             continue;
         if (i == 'submit')
             continue;
-        console.log(i);
+        // console.log(i);
         var a = req.body[i] == 'yes' ? true : false;
         if (a)
             animal.positives.push(i);

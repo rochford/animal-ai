@@ -24,20 +24,7 @@ var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
-function getQandA(req) {
-    var data = req.cookies.questionsanswers;
 
-    var yesQ = [];
-    var noQ = [];
-    var qAndA = utils.getQuestionsAndAnswers(data);
-    for (var i = 0; i < qAndA.length; i++) {
-        if (qAndA[i].answer  === 'yes')
-            yesQ.push(qAndA[i].question);
-        else if (qAndA[i].answer === 'no')
-            noQ.push(qAndA[i].question);
-    }
-    return [qAndA, yesQ, noQ];
-}
 
 function getQuery(yesQ, noQ) {
     var query = {
@@ -72,7 +59,7 @@ function nextQuestion(collection,
                       redirectCB,
                       renderCB)
 {
-    var yesNoArray = getQandA(req);
+    var yesNoArray = utils.getQandA(req);
     var qAndA = yesNoArray[0];
     var yesQ = yesNoArray[1];
     var noQ = yesNoArray[2];
@@ -172,13 +159,31 @@ exports.lost = function(req, res) {
                    qAndAValue: qAndA});
 };
 
+exports.won = function(req, res) {
+    utils.printCookies(req);
+    var data = req.cookies.questionsanswers;
+
+    var qAndA = utils.getQuestionsAndAnswers(data);
+
+    utils.forceRefresh(res);
+    res.render('won', { pageTitle: 'Won',
+                   qAndAValue: qAndA});
+};
+
 exports.game = function(req, res) {
     utils.printCookies(req);
-    var questionnumber = Number(req.cookies.questionnumber);
-
     utils.forceRefresh(res);
     
     nextQuestion(mongo.db.a2, req, res, redirect, render);
+};
+
+exports.newgame = function(req, res) {
+    utils.printCookies(req);
+    utils.clearCookies(res);
+    utils.resetCookies(res);
+
+    utils.forceRefresh(res);
+    res.redirect('/game');
 };
 
 exports.yes = function(req, res){

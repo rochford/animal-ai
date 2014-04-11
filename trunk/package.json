@@ -5,10 +5,8 @@
   "scripts": {
     "start": "node app"
   },
-  "devDependencies": {
-      "nodeunit": "0.8.6",
-  },
   "dependencies": {
+    "nodeunit": "0.8.6",
     "express": "3.0.6",
     "underscore": "1.6.0",
     "jade": "*",

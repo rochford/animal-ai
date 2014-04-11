@@ -1,29 +1,19 @@
 doctype html
-html
+html(lang="en")
 	include includes/header
 	body
 		include includes/topbar
 
-		div.container
+		div.container-fluid
 				div.content
 					div.jumbotron
 						div.row
-								div.span12
-									label.label-primary Question Number #{questionNumber}
-									- if (qAndAValue.length)
-										table.table-striped
-											each x in qAndAValue
-												tr
-													td
-														label #{x.question}
-													td
-														label.label-info #{x.answer}
+							label.label-primary Question Number #{questionNumber}
+							+listQAndA(qAndAValue)
 						div.row
 							div.span12
 								p #{question}
 									div.row
-										div.span4
-											a(href='/yes') Yes
-										div.span4
-											a(href='/no') No
+										a(class="btn btn-default" href='/no') No
+										a(class="btn btn-success" href='/yes') Yes
 include includes/footer

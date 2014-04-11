@@ -30,7 +30,13 @@ exports.guess = function(req, res) {
 
     res.cookie(utils.COOKIE_QUESTIONNUMBER, questionnumber + 1, { });
 
-    res.render('guess', { pageTitle: 'Guess', guess: req.cookies.guess.toLowerCase() });
+    var yesNoArray = utils.getQandA(req);
+    var qAndA = yesNoArray[0];
+    
+    res.render('guess', { pageTitle: 'Guess', 
+                   questionNumber: questionnumber,
+                   qAndAValue: qAndA,
+                   guess: req.cookies.guess.toLowerCase() });
 };
 
 exports.guessyes = function(req, res) {
@@ -72,8 +78,8 @@ exports.guessyes = function(req, res) {
 //        console.log(animal[0]);
         mongo.db.a2.update({ name: req.cookies.guess.toLowerCase() }, animal[0], {multi:false},function() {
             utils.forceRefresh(res);
-
-            res.redirect('/');
+            res.redirect('/won');
+            return;
         });
     });
 

@@ -1,5 +1,5 @@
 doctype html
-html
+html(lang="en")
 	include includes/header
 	body
 		include includes/topbar
@@ -8,11 +8,10 @@ html
 				div.content
 					div.jumbotron
 						div.row
-							h3 AnimalGuess thinks the animal is...
-								h2 #{guess}
-									div.row
-										div.span4
-											a(href='/guessyes') Correct
-											p 
-											a(href='/guessno') Incorrect
+							label.label-primary Question Number #{questionNumber}
+							+listQAndA(qAndAValue)
+							h3 Is it a #{guess}?
+								div.row
+									a(class="btn btn-default" href='/guessno') No
+									a(class="btn btn-success" href='/guessyes') Yes
 include includes/footer

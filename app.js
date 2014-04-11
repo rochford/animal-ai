@@ -61,7 +61,9 @@ app.get('/', index.index);
 app.get('/about', index.about);
 app.get('/error', index.error);
 
+app.get('/newgame', game.newgame);
 app.get('/game', game.game);
+app.get('/won', game.won);
 app.get('/lost', game.lost);
 app.get('/yes', game.yes);
 app.get('/no', game.no);

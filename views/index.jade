@@ -1,9 +1,9 @@
 doctype html
-html
+html(lang="en")
 	include includes/header
 	body
 		include includes/topbar
-		div.container-fluid
+		div.container-fluid.visible-md.visible-lg
 			// Carousel
 			#myCarousel.carousel.slide(data-ride="carousel")
 				// Indicators
@@ -14,21 +14,21 @@ html
 				// Wrapper for slides
 				.carousel-inner
 					.item.active
-						img(src="images/elephant.png" width="60%",  max-width="300px", alt="animal guess game 20 questions")
+						img(src="images/elephant.png" max-height="160px", max-width="300px", alt="animal guess game 20 questions")
 						.container
 							.carousel-caption
 								.span6
 									label.label-info Is it considered intelligent?
 								label.label-success Yes
 					.item
-						img(src="images/rhino.png" width="60%",  max-width="300px",alt="animal guess game 20 questions")
+						img(src="images/rhino.png" max-height="160px", max-width="300px",alt="animal guess game 20 questions")
 						.container
 							.carousel-caption
 								.span6
 									label.label-info Does it live in Africa?
 								label.label-success Yes
 					.item
-						img(src="images/cat.png" width="60%", max-width="300px", alt="animal guess game 20 questions")
+						img(src="images/cat.png" max-height="160px",max-width="300px", alt="animal guess game 20 questions")
 						.container
 							.carousel-caption
 								.span6
@@ -37,24 +37,26 @@ html
 				a.left.carousel-control(href="#myCarousel" data-slide="prev") &lsaquo;
 				a.right.carousel-control(href="#myCarousel" data-slide="next") &rsaquo;
 
+		p
 		div.jumbotron
+			div.container-fluid.text-center
+				a(class="btn btn-primary btn-lg" href='/newgame') Play Game
 				h2 Think of an animal and play the game! 
 				h4 AnimalGuess will ask questions to guess the animal.
-				div.span12.text-center
-					a(class="btn btn-primary btn-lg" href='/game') Play
-		div.row
-			div.container-fluid
-				div.span6
-					div.jumbotron
+
+		p
+		div.jumbotron
+			div.container
+				div.row
+					div.col-xs-6
 						a(class="btn btn-primary btn-lg" href='/animal') Add Animal
 						h4
-							label.label-info Number of animals #{numberAnimals}
+							//- label.label-info Number of animals #{numberAnimals}
 							p Help improve AnimalGuess by adding an animal.
-				div.span6
-					div.jumbotron
+					div.col-xs-6
 						a(class="btn btn-primary btn-lg" href='/question') Add Question
 						h4
-							label.label-info Number of questions #{numberQuestions}
+							//- label.label-info Number of questions #{numberQuestions}
 							p Help improve AnimalGuess by adding a question.
 
 	include includes/footer

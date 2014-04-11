@@ -1,18 +1,21 @@
 doctype html
-html
+html(lang="en")
 	include includes/header
 	body
 		include includes/topbar
 
 		div.container-fluid
-			div.span12
+			div.content
 				div.jumbotron
 					legend #{pageTitle}
 					h4 Add a question to AnimalGuess. 
 					p Add good question will be applicable to many animal species and will have a 'Yes' or 'No' answer. 
 					label.label-warning Remember to put a question mark ('?') at the end.
 					form(method='post',action='/question')
-							input(name='newquestion',type='text')
+						div.row
+							input(name='newquestion',class="form-control",type='text')
+						div.row
+							a(class="btn btn-default" href='/') Cancel
 							input(name='submit',type='submit',class="btn btn-primary").submit-button
 
 include includes/footer

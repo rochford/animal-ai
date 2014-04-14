@@ -56,6 +56,12 @@ exports.resetCookies = function resetCookies(res) {
     res.cookie(COOKIE_CURRENT_QUESTION, '', { });
 }
 
+exports.cookieUsageWarning = function cookieUsageWarning(req){
+    var dismiss = false;
+    if (req.session && req.session.dismiss)
+        dismiss = req.session.dismiss === 'OK' ? true : false;
+    return dismiss;    
+}
 
 exports.getQuestionsAndAnswers = function getQuestionsAndAnswers(data)  {
     var qAndA = [];

@@ -32,11 +32,12 @@ exports.guess = function(req, res) {
 
     var yesNoArray = utils.getQandA(req);
     var qAndA = yesNoArray[0];
-    
+
     res.render('guess', { pageTitle: 'Guess', 
                    questionNumber: questionnumber,
                    qAndAValue: qAndA,
-                   guess: req.cookies.guess.toLowerCase() });
+                   guess: req.cookies.guess.toLowerCase(),
+               dismiss: utils.cookieUsageWarning(req)});
 };
 
 exports.guessyes = function(req, res) {
@@ -45,8 +46,10 @@ exports.guessyes = function(req, res) {
     var data = req.cookies.questionsanswers;
     if (!data) {
         utils.forceRefresh(res);
+
         res.render('error', { pageTitle: 'Error',
-                       errorReason: 'Cannot guess as no questions answered' });
+                       errorReason: 'Cannot guess as no questions answered',
+                   dismiss: utils.cookieUsageWarning(req)});
         return;
     }
 

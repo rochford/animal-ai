@@ -24,12 +24,18 @@ var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
+exports.dismiss = function(req, res){
+    req.session.dismiss = 'OK';
+    res.redirect(req.get('referer'));
+};
+
 exports.about = function(req, res){
 //    console.log("app.get(/about) " + utils.printCookies(req));
     utils.clearCookies(res);
     utils.resetCookies(res);
 
-    res.render('about', { path: req.path, pageTitle: 'About AnimalGuess' });
+    res.render('about', { path: req.path, pageTitle: 'About AnimalGuess',
+               dismiss: utils.cookieUsageWarning(req)});
 };
 
 exports.error = function(req, res){
@@ -37,7 +43,8 @@ exports.error = function(req, res){
     utils.clearCookies(res);
     utils.resetCookies(res);
 
-    res.render('error', { pageTitle: 'Error' });
+    res.render('error', { pageTitle: 'Error',
+               dismiss: utils.cookieUsageWarning(req)});
 };
 
 exports.index =  function(req, res){
@@ -45,10 +52,12 @@ exports.index =  function(req, res){
     utils.printCookies(req);
     utils.clearCookies(res);
     utils.resetCookies(res);
+
     mongo.db.a2.find({}, function(err, animals) {
         if (err || !animals || animals.length == 0) {
             res.render('error', { pageTitle: 'Error',
-                           errorReason: 'Could not connect to database' });
+                           errorReason: 'Could not connect to database',
+                       dismiss: utils.cookieUsageWarning(req)});
             return;
         }
 
@@ -62,10 +71,12 @@ exports.index =  function(req, res){
             }
             var qCount = q.length;
 
+
             res.render('index', { path: req.path, 
                            pageTitle: 'Animal Guess',
                            numberAnimals: count,
-                           numberQuestions: qCount});
+                           numberQuestions: qCount,
+                           dismiss: utils.cookieUsageWarning(req)});
         });
     });
 }

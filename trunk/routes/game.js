@@ -24,8 +24,6 @@ var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
-
-
 function getQuery(yesQ, noQ) {
     var query = {
         positives : { $all : yesQ},
@@ -45,12 +43,14 @@ function redirect(res, page) {
     res.redirect(page);
 }
 
-function render(res, questionnumber, question, qAndA) {
+function render(req, res, questionnumber, question, qAndA) {
     utils.forceRefresh(res);
+
     res.render('game', { pageTitle: 'Game in Progress',
                    questionNumber: questionnumber,
                    question: question,
-                   qAndAValue: qAndA});
+                   qAndAValue: qAndA,
+                   dismiss: utils.cookieUsageWarning(req)});
 }
 
 function nextQuestion(collection, 
@@ -65,7 +65,9 @@ function nextQuestion(collection,
     var noQ = yesNoArray[2];
 
     var questionnumber = Number(req.cookies.questionnumber);
-
+    var numberOfQuestions = req.cookies.questionsanswers.split("&");
+    questionnumber = numberOfQuestions.length;
+    
     var query = getQuery(yesQ, noQ);
 
     console.log(query);
@@ -139,7 +141,7 @@ function nextQuestion(collection,
 
                                             res.cookie(utils.COOKIE_QUESTIONNUMBER, questionnumber + 1, { });
 
-                                            renderCB(res, questionnumber, question, qAndA);
+                                            renderCB(req, res, questionnumber, question, qAndA);
                                         })
                         })
         }
@@ -156,7 +158,8 @@ exports.lost = function(req, res) {
 
     utils.forceRefresh(res);
     res.render('lost', { pageTitle: 'Unknown Animal',
-                   qAndAValue: qAndA});
+                   qAndAValue: qAndA,
+               dismiss: utils.cookieUsageWarning(req)});
 };
 
 exports.won = function(req, res) {
@@ -167,7 +170,8 @@ exports.won = function(req, res) {
 
     utils.forceRefresh(res);
     res.render('won', { pageTitle: 'Won',
-                   qAndAValue: qAndA});
+                   qAndAValue: qAndA,
+               dismiss: utils.cookieUsageWarning(req)});
 };
 
 exports.game = function(req, res) {

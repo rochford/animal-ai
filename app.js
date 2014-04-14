@@ -43,6 +43,7 @@ app.configure(function(){
         }
     });
     app.use(express.cookieParser(process.env.COOKIE_SECRET));
+    app.use(express.session({secret: process.env.COOKIE_SECRET + '1234567890QWERTY'}));
     app.use(express.urlencoded()); // to support URL-encoded bodies
     app.use(express.favicon());
     app.use(express.logger('dev'));
@@ -60,6 +61,7 @@ app.configure('development', function(){
 app.get('/', index.index);
 app.get('/about', index.about);
 app.get('/error', index.error);
+app.get('/dismiss', index.dismiss);
 
 app.get('/newgame', game.newgame);
 app.get('/game', game.game);

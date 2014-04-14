@@ -4,7 +4,6 @@
 # remove bad characters from input
 # research neural networks in node.js
 # consider an "unknown"/"I don't know"/"sometimes" answer besides Yes/no
-# make the guess.jade/js more like game.js. Instead of guessing, phrase it as a question such as Is it a XXX?
 # startup check to ensure all animals are unique
 # rethink callbacks
 # decide if remove addanimal and add question pages from main index page.

@@ -41,20 +41,24 @@ function parseQuestion(q) {
 exports.question = function(req, res) {
     console.log("app.get(/question) " + utils.printCookies(req));
 
-    res.render('question', { pageTitle: 'Add Question' });
+    res.render('question', { pageTitle: 'Add Question',
+               dismiss: utils.cookieUsageWarning(req)});
 };
 
 exports.postQuestion = function(req, res) {
     console.log(utils.printCookies(req));
 
-    var err = parseQuestion(req.body.newquestion);
+    var question = req.body.newquestion.toLowerCase().trim();
+    var err = parseQuestion(question);
     if (err) {
+
         res.render('error', { pageTitle: 'Error',
-                       errorReason: 'Bad question: ' + err });
+                       errorReason: 'Bad question: ' + err,
+                   dismiss: utils.cookieUsageWarning(req)});
         return;
     }
 
-    mongo.db.questions.insert( { q: req.body.newquestion.toLowerCase()});
+    mongo.db.questions.insert( { q: question});
 
     utils.forceRefresh(res);
     res.redirect('/');

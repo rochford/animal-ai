@@ -3,7 +3,6 @@
 		btn(type="button", class="navbar-toggle", data-toggle="collapse", data-target=".navbar-inverse-collapse")
 				span.icon-bar
 				span.icon-bar
-				span.icon-bar
 		a(class="navbar-brand", href="/") AnimalGuess
 	.navbar-collapse.collapse.navbar-inverse-collapse
 		ul.nav.navbar-nav
@@ -16,3 +15,13 @@
 			li(class=path=='/about'?'active':undefined)
 				a(href="/about") About
 
+- if (!dismiss)
+	div.alert.alert-dismissable.alert-danger
+		button(type="button", class="close" data-dismiss="alert") &times;
+		h4 Warning
+		p 
+			This webserver uses cookies to store game information.  See 
+			a(href='/about', class='link-alert') About 
+			| for more information.
+			a(href='/dismiss', class='link-alert') Dismiss
+					

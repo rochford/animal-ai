@@ -3,6 +3,7 @@ html(lang="en")
 	include includes/header
 	body
 		include includes/topbar
+
 		div.container-fluid.visible-md.visible-lg
 			// Carousel
 			#myCarousel.carousel.slide(data-ride="carousel")
@@ -38,22 +39,22 @@ html(lang="en")
 				a.right.carousel-control(href="#myCarousel" data-slide="next") &rsaquo;
 
 		p
-		div.jumbotron
-			div.container-fluid.text-center
+		div.container.text-center
+			div.jumbotron
 				a(class="btn btn-primary btn-lg" href='/newgame') Play Game
 				h2 Think of an animal and play the game! 
 				h4 AnimalGuess will ask questions to guess the animal.
 
 		p
-		div.jumbotron
-			div.container
+		div.container
+			div.jumbotron
 				div.row
-					div.col-xs-6
+					div.col-sm-6
 						a(class="btn btn-primary btn-lg" href='/animal') Add Animal
 						h4
 							//- label.label-info Number of animals #{numberAnimals}
 							p Help improve AnimalGuess by adding an animal.
-					div.col-xs-6
+					div.col-sm-6
 						a(class="btn btn-primary btn-lg" href='/question') Add Question
 						h4
 							//- label.label-info Number of questions #{numberQuestions}

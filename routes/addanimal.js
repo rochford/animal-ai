@@ -81,12 +81,14 @@ function updateAnimal(collection,
                       redirectCB)
 {
     if (!req.body.name.toLowerCase()) {
+
         res.render('error', { pageTitle: 'Error',
-                       errorReason: 'No animal name submitted.' });
+                       errorReason: 'No animal name submitted.',
+                       dismiss: utils.cookieUsageWarning(req)});
         return;
     }
-    
-    var animal = { name: req.body.name.toLowerCase(),
+    var animalName = req.body.name.toLowerCase().trim();
+    var animal = { name: animalName,
         positives: [],
         negatives: []};
     var data = req.cookies.questionsanswers;
@@ -125,9 +127,9 @@ function updateAnimal(collection,
     // remove duplicates
     animal.positives = _.uniq(animal.positives);
     animal.negatives = _.uniq(animal.negatives);
-
-    collection.find( { name: req.body.name.toLowerCase()}, function(err, docs) {
-
+    
+    collection.find( { name: animalName}, function(err, docs) {
+        
         if( err || !docs || docs.length === 0) {
             console.log("No animal found to update ");
             mongo.db.a2.insert(animal);
@@ -140,16 +142,16 @@ function updateAnimal(collection,
             for (var i = 0; i < animal.negatives.length; i++) {            
                 docs[0].negatives.push(animal.negatives[i]);
             }
-
+            
             docs[0].positives = _.uniq(docs[0].positives);
             docs[0].negatives = _.uniq(docs[0].negatives);
-
-            collection.update({ name: req.body.name.toLowerCase()}, docs[0], { upsert: true });
+            
+            collection.update({ name: animalName}, docs[0], { upsert: true });
         }
-
+        
         redirectCB(res, '/');
         return;
-        });
+    });
 }
 
 exports.postAnimal = function(req, res) {

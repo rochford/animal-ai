@@ -28,13 +28,14 @@ var MAX_QUESTION_LENGTH = 60;
 var MIN_QUESTION_LENGTH = 5;
 
 function parseQuestion(q) {
-
+    if(!q)
+        return "No question";
+    if (q.length < MIN_QUESTION_LENGTH)
+        return "Question is too short";
     if (q.length > MAX_QUESTION_LENGTH)
         return "Question is too long";
     if (q.indexOf('?') === -1)
         return "No question mark";
-    if (q.length < -1)
-        return "Question is too short";
     return "";
 }
 

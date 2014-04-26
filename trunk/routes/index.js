@@ -35,7 +35,8 @@ exports.about = function(req, res){
     utils.resetCookies(res);
 
     res.render('about', { path: req.path, pageTitle: 'About AnimalGuess',
-               dismiss: utils.cookieUsageWarning(req)});
+               dismiss: utils.cookieUsageWarning(req),
+               analytics: req.session.analytics});
 };
 
 exports.error = function(req, res){
@@ -44,7 +45,8 @@ exports.error = function(req, res){
     utils.resetCookies(res);
 
     res.render('error', { pageTitle: 'Error',
-               dismiss: utils.cookieUsageWarning(req)});
+               dismiss: utils.cookieUsageWarning(req),
+               analytics: req.session.analytics});
 };
 
 exports.index =  function(req, res){
@@ -53,32 +55,10 @@ exports.index =  function(req, res){
     utils.clearCookies(res);
     utils.resetCookies(res);
 
-    mongo.db.a2.find({}, function(err, animals) {
-        if (err || !animals || animals.length == 0) {
-            res.render('error', { pageTitle: 'Error',
-                           errorReason: 'Could not connect to database',
-                       dismiss: utils.cookieUsageWarning(req)});
-            return;
-        }
-
-        var count = animals.length;
-
-        mongo.db.questions.find({}, function(err, q) {
-            if (err || !q || q.length == 0) {
-                res.render('error', { pageTitle: 'Error',
-                               errorReason: 'Could not connect to database' });
-                return;
-            }
-            var qCount = q.length;
-
-
-            res.render('index', { path: req.path, 
+    res.render('index', { path: req.path, 
                            pageTitle: 'Animal Guess',
-                           numberAnimals: count,
-                           numberQuestions: qCount,
-                           dismiss: utils.cookieUsageWarning(req)});
-        });
-    });
+                           dismiss: utils.cookieUsageWarning(req),
+               analytics: req.session.analytics});
 }
 
 

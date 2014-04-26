@@ -42,11 +42,22 @@ app.configure(function(){
             next();
         }
     });
+    
     app.use(express.cookieParser(process.env.COOKIE_SECRET));
     app.use(express.session({secret: process.env.COOKIE_SECRET + '1234567890QWERTY'}));
     app.use(express.urlencoded()); // to support URL-encoded bodies
     app.use(express.favicon());
     app.use(express.logger('dev'));
+    app.use(function (req, res, next) {
+        var ip = utils.getClientIp(req);
+        
+        if (ip === process.env.DEV_IP)
+            req.session.analytics = false;
+        else
+            req.session.analytics = true;
+        next();
+    });
+
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(app.router);

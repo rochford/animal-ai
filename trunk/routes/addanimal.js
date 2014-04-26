@@ -24,14 +24,14 @@ var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
-exports.animal = function(req, res) {
-    console.log("app.get(/animal) "); 
-    utils.printCookies(req);
-    
+function getAllDbQuestions(req, res, alerts, callback)
+{
     mongo.db.questions.count(function(err, nbDocs) {
         if (err || !nbDocs || nbDocs.length === 0) {
             res.render('error', { pageTitle: 'Error',
-                           errorReason: 'Could not connect to database' });
+                           errorReason: 'Could not connect to database',
+                           dismiss: utils.cookieUsageWarning(req),
+                       analytics: req.session.analytics});
         }
         
         var alreadyAsked = [];
@@ -48,27 +48,43 @@ exports.animal = function(req, res) {
                 alreadyAsked.push(q);
             }
         };
+        callback(req, res, nbDocs, alreadyAsked, alerts);
+    })
+}
+
+function removeAlreadyAskedQuestions(req, res, nbDocs, alreadyAsked, alerts) {
+    
+    var q = [];
+    var r = _.random(0,nbDocs);
+    mongo.db.questions.find({ q: {$nin : alreadyAsked }}).skip(r).limit(10, function(err, docs)
+    {
+        if (err || !docs || docs.length === 0) {
+            res.render('error', { pageTitle: 'Error',
+                           errorReason: 'Could not connect to database',
+                           dismiss: utils.cookieUsageWarning(req),
+                       analytics: req.session.analytics});
+            return;
+        }
         
-        // Do what you need the count for here.
-        var q = [];
-        var r = _.random(0,nbDocs);
-        mongo.db.questions.find({ q: {$nin : alreadyAsked }}).skip(r).limit(10, function(err, docs)
-        {
-            if (err || !docs || docs.length === 0) {
-                res.render('error', { pageTitle: 'Error',
-                               errorReason: 'Could not connect to database' });
-                return;
-            }
-            
-            for (var i = 0; i < docs.length; i++) {
-                console.log(docs[i]._id);
-                q.push(docs[i].q);
-            }
-            
-            res.render('animal', { pageTitle: 'Add Animal' , qAndA: q,
-                       dismiss: utils.cookieUsageWarning(req)});
-        });
+        for (var i = 0; i < docs.length; i++) {
+            console.log(docs[i]._id);
+            q.push(docs[i].q);
+        }
+        
+        res.render('animal', { path: req.path,
+                       alerts: alerts,
+                       pageTitle: 'Add Animal' , qAndA: q,
+                       dismiss: utils.cookieUsageWarning(req),
+                   analytics: req.session.analytics});
     });
+    
+}
+
+exports.animal = function(req, res) {
+    console.log("app.get(/animal) "); 
+    utils.printCookies(req);
+    
+    getAllDbQuestions(req, res, [], removeAlreadyAskedQuestions);
 }
 
 function redirect(res, page) {
@@ -82,10 +98,7 @@ function updateAnimal(collection,
                       redirectCB)
 {
     if (!req.body.name.toLowerCase()) {
-
-        res.render('error', { pageTitle: 'Error',
-                       errorReason: 'No animal name submitted.',
-                       dismiss: utils.cookieUsageWarning(req)});
+        getAllDbQuestions(req, res, ['No animal name submitted.'], removeAlreadyAskedQuestions);
         return;
     }
     var animalName = req.body.name.toLowerCase().trim();

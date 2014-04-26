@@ -50,7 +50,8 @@ function render(req, res, questionnumber, question, qAndA) {
                    questionNumber: questionnumber,
                    question: question,
                    qAndAValue: qAndA,
-                   dismiss: utils.cookieUsageWarning(req)});
+                   dismiss: utils.cookieUsageWarning(req),
+               analytics: req.session.analytics});
 }
 
 function nextQuestion(collection, 
@@ -159,7 +160,8 @@ exports.lost = function(req, res) {
     utils.forceRefresh(res);
     res.render('lost', { pageTitle: 'Unknown Animal',
                    qAndAValue: qAndA,
-               dismiss: utils.cookieUsageWarning(req)});
+               dismiss: utils.cookieUsageWarning(req),
+               analytics: req.session.analytics});
 };
 
 exports.won = function(req, res) {
@@ -171,7 +173,8 @@ exports.won = function(req, res) {
     utils.forceRefresh(res);
     res.render('won', { pageTitle: 'Won',
                    qAndAValue: qAndA,
-               dismiss: utils.cookieUsageWarning(req)});
+               dismiss: utils.cookieUsageWarning(req),
+               analytics: req.session.analytics});
 };
 
 exports.game = function(req, res) {

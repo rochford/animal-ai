@@ -43,7 +43,8 @@ exports.question = function(req, res) {
     console.log("app.get(/question) " + utils.printCookies(req));
 
     res.render('question', { pageTitle: 'Add Question',
-               dismiss: utils.cookieUsageWarning(req)});
+               dismiss: utils.cookieUsageWarning(req),
+               analytics: req.session.analytics});
 };
 
 exports.postQuestion = function(req, res) {
@@ -55,7 +56,8 @@ exports.postQuestion = function(req, res) {
 
         res.render('error', { pageTitle: 'Error',
                        errorReason: 'Bad question: ' + err,
-                   dismiss: utils.cookieUsageWarning(req)});
+                   dismiss: utils.cookieUsageWarning(req),
+                   analytics: req.session.analytics});
         return;
     }
 

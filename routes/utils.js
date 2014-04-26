@@ -66,18 +66,20 @@ exports.cookieUsageWarning = function cookieUsageWarning(req){
 exports.getQuestionsAndAnswers = function getQuestionsAndAnswers(data)  {
     var qAndA = [];
 
-    var numberOfQuestions = data.split("&");
-    for (var i = 0; i < numberOfQuestions.length; i++) {
-        console.log(numberOfQuestions[i]);
-        var tmp = numberOfQuestions[i].split('=');
-        var q = tmp[0] + "";
-        var a = tmp[1] + "";
-        if (q == "")
-            continue;
-        if (a == "")
-            continue;
-        var item = { question : q, answer: a  };
-        qAndA.push(item);
+    if (data) {
+        var numberOfQuestions = data.split("&");
+        for (var i = 0; i < numberOfQuestions.length; i++) {
+            console.log(numberOfQuestions[i]);
+            var tmp = numberOfQuestions[i].split('=');
+            var q = tmp[0] + "";
+            var a = tmp[1] + "";
+            if (q == "")
+                continue;
+            if (a == "")
+                continue;
+            var item = { question : q, answer: a  };
+            qAndA.push(item);
+        }
     }
     return qAndA;
 }
@@ -96,3 +98,15 @@ exports.getQandA = function getQandA(req) {
     }
     return [qAndA, yesQ, noQ];
 }
+
+exports.getClientIp = function getClientIp(req) {
+  var ipAddress = null;
+  var forwardedIpsStr = req.headers['x-forwarded-for'];
+  if (forwardedIpsStr) {
+    ipAddress = forwardedIpsStr[0];
+  }
+  if (!ipAddress) {
+    ipAddress = req.connection.remoteAddress;
+  }
+  return ipAddress;
+};

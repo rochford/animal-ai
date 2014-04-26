@@ -11,6 +11,12 @@ html(lang="en")
 									div.row
 										form(class="horizontal", name="addanimal",method='post',action='/animal')
 											legend #{pageTitle}
+											- if (alerts)
+												each alertMsg in alerts
+													div.alert.alert-dismissable.alert-danger
+														button(type="button", class="close" data-dismiss="alert") &times;
+														h4 Error
+														p= alertMsg 
 											div.span12
 												label Animal name
 												input(name='name',type='text',class="form-control",placeholder="")

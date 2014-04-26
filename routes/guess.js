@@ -37,7 +37,8 @@ exports.guess = function(req, res) {
                    questionNumber: questionnumber,
                    qAndAValue: qAndA,
                    guess: req.cookies.guess.toLowerCase(),
-               dismiss: utils.cookieUsageWarning(req)});
+               dismiss: utils.cookieUsageWarning(req),
+               analytics: req.session.analytics});
 };
 
 exports.guessyes = function(req, res) {
@@ -49,7 +50,8 @@ exports.guessyes = function(req, res) {
 
         res.render('error', { pageTitle: 'Error',
                        errorReason: 'Cannot guess as no questions answered',
-                   dismiss: utils.cookieUsageWarning(req)});
+                   dismiss: utils.cookieUsageWarning(req),
+                   analytics: req.session.analytics});
         return;
     }
 

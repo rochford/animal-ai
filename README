@@ -2,10 +2,12 @@ sudo apt-get update
 sudo apt-get install -y python-software-properties
 sudo add-apt-repository -y ppa:chris-lea/node.js
 sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get upgrade -y
 sudo apt-get install -y nodejs
 sudo apt-get install -y subversion
 mkdir web
 cd web/
 svn checkout http://animal-ai.googlecode.com/svn/trunk/ animal-ai-read-only
-nohup sudo PORT=80 COOKIE_SECRET='foobar' MONGO_SERVER_URL='x.x.x.x:27017/test' node app.js
+cd animal-ai-read-only
+npm install
+nohup sudo PORT=80 COOKIE_SECRET='foobar' MONGO_SERVER_URL='x.x.x.x:27017/test' DEV_IP='127.0.0.1' node app.js &

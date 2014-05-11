@@ -1,11 +1,7 @@
-# need to get more data about animals when only have 1 in result set
 # more test cases required.
-# input validation. better implementation when adding new animals.
 # remove bad characters from input
 # research neural networks in node.js
 # consider an "unknown"/"I don't know"/"sometimes" answer besides Yes/no
-# startup check to ensure all animals are unique
 # rethink callbacks
-# decide if remove addanimal and add question pages from main index page.
 # somehow list existing animals.
 # report incorrect postive/negative values for an animal?

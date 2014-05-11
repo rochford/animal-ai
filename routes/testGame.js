@@ -20,11 +20,11 @@ var res = {
 function setup() {
     cookiePot = [];
     var databaseUrl = "test"; // "username:password@example.com/mydb"
-    var collections = ["testQuestions","testAniamls"];
+    var collections = ["testQuestions","testAnimals"];
     db = require("mongojs").connect(databaseUrl, collections);
     
-    db.testAniamls.remove({});
-    db.testAniamls.insert({  name: "frog",
+    db.testAnimals.remove({});
+    db.testAnimals.insert({  name: "frog",
                               positives: [
                                   "Does it live in water?",
                                   "Is it a predator?",
@@ -33,7 +33,7 @@ function setup() {
                               negatives: [
                                   "Is it slimy?"
                               ] });
-    db.testAniamls.insert({  name: "lion",
+    db.testAnimals.insert({  name: "lion",
                               positives: [
                                   "Is it a predator?",
                                   "Can it jump?"
@@ -54,10 +54,12 @@ function render(res, questionnumber, question, qAndA) {
 exports.nextQuestion = function(test)  {
     test.expect(2);
     setup();
-    game.nextQuestion(db.testAniamls, req, res, redirect, 
-                      function(res, questionnumber, question, qAndA) {
+    game.nextQuestion(db.testAnimals, req, res, redirect, 
+                      function(req, res, questionnumber, question, qAndA) {
+                          console.log(question);
+                          console.log(questionnumber);
                           test.strictEqual(question, "Does it live in water?");
-                          test.strictEqual(questionnumber, 0);
+                          test.strictEqual(questionnumber, 1);
                           test.done();
                       });
 }

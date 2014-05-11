@@ -20,13 +20,19 @@ var _ = require('underscore');
 var utils = require('./utils.js');
 var mongo = require('./mongo.js');
 
-var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
-var COOKIE_GUESS             = 'guess';
-var COOKIE_CURRENT_QUESTION  = 'currentquestion';
-
 exports.dismiss = function(req, res){
-    req.session.dismiss = 'OK';
+    res.cookie(utils.COOKIE_POLICY, 'OK', { });
     res.redirect(req.get('referer'));
+};
+
+exports.animal_added = function(req, res){
+//    console.log("app.get(/animal_added) " + utils.printCookies(req));
+    utils.clearCookies(res);
+    utils.resetCookies(res);
+
+    res.render('animal_added', { path: req.path, pageTitle: 'Animal Added',
+               dismiss: utils.cookieUsageWarning(req),
+               analytics: req.session.analytics});
 };
 
 exports.about = function(req, res){

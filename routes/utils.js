@@ -20,11 +20,13 @@ var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
 var COOKIE_QUESTIONNUMBER    = 'questionnumber';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
+var COOKIE_POLICY            = 'cookiepolicy';
 
 exports.COOKIE_QUESTIONSANSWERS = COOKIE_QUESTIONSANSWERS;
 exports.COOKIE_QUESTIONNUMBER = COOKIE_QUESTIONNUMBER;
 exports.COOKIE_GUESS = COOKIE_GUESS;
 exports.COOKIE_CURRENT_QUESTION = COOKIE_CURRENT_QUESTION;
+exports.COOKIE_POLICY = COOKIE_POLICY;
 
 exports.printCookies = function printCookies(req) {
     /*
@@ -32,6 +34,7 @@ exports.printCookies = function printCookies(req) {
     console.log("COOKIE - GUESS: " + req.cookies.guess);
     console.log("COOKIE - QUESTIONNUMBER: " + req.cookies.questionnumber);
     console.log("COOKIE - CURRENT QUESTON: " + req.cookies.currentquestion);
+    console.log("COOKIE - COOKIE_POLICY: " + req.cookies.cookiepolicy);
     */
 }
 
@@ -58,8 +61,9 @@ exports.resetCookies = function resetCookies(res) {
 
 exports.cookieUsageWarning = function cookieUsageWarning(req){
     var dismiss = false;
-    if (req.session && req.session.dismiss)
-        dismiss = req.session.dismiss === 'OK' ? true : false;
+    if (req.cookies.cookiepolicy && req.cookies.cookiepolicy == 'OK')
+        dismiss = true;
+    console.log("cookieUsageWarning: dismiss: " + dismiss);
     return dismiss;    
 }
 
@@ -110,3 +114,5 @@ exports.getClientIp = function getClientIp(req) {
   }
   return ipAddress;
 };
+
+

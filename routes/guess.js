@@ -57,10 +57,9 @@ exports.guessyes = function(req, res) {
 
     // update the db
     var numberOfQuestions = data.split("&");
-    console.log("numberOfQuestions:" +  numberOfQuestions)
     mongo.db.a2.find({ name: req.cookies.guess.toLowerCase() }, function(err, animal) {
         if( err || !animal || animal.length === 0) {
-            console.log("No animal found to update ");
+//            console.log("No animal found to update ");
             utils.forceRefresh(res);
             res.redirect('/');
             return;

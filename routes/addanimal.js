@@ -38,7 +38,6 @@ function getAllDbQuestions(req, res, alerts, callback)
         var data = req.cookies.questionsanswers;
         if (data) {
             var numberOfQuestions = data.split("&");
-            console.log("numberOfQuestions:" +  numberOfQuestions)
             
             for (var i = 0; i < numberOfQuestions.length; i++) {
                 var tmp = numberOfQuestions[i].split('=');
@@ -67,7 +66,7 @@ function removeAlreadyAskedQuestions(req, res, nbDocs, alreadyAsked, alerts) {
         }
         
         for (var i = 0; i < docs.length; i++) {
-            console.log(docs[i]._id);
+//            console.log(docs[i]._id);
             q.push(docs[i].q);
         }
         
@@ -81,7 +80,7 @@ function removeAlreadyAskedQuestions(req, res, nbDocs, alreadyAsked, alerts) {
 }
 
 exports.animal = function(req, res) {
-    console.log("app.get(/animal) "); 
+//    console.log("app.get(/animal) "); 
     utils.printCookies(req);
     
     getAllDbQuestions(req, res, [], removeAlreadyAskedQuestions);
@@ -108,7 +107,6 @@ function updateAnimal(collection,
     var data = req.cookies.questionsanswers;
     if (data) {
         var numberOfQuestions = data.split("&");
-        console.log("numberOfQuestions:" +  numberOfQuestions)
         
         for (var i = 0; i < numberOfQuestions.length; i++) {
             var tmp = numberOfQuestions[i].split('=');
@@ -145,10 +143,10 @@ function updateAnimal(collection,
     collection.find( { name: animalName}, function(err, docs) {
         
         if( err || !docs || docs.length === 0) {
-            console.log("No animal found to update ");
+//            console.log("No animal found to update ");
             mongo.db.a2.insert(animal);
         } else if (docs.length === 1) {
-            console.log("Single animal found");
+//            console.log("Single animal found");
             
             for (var i = 0; i < animal.positives.length; i++) {            
                 docs[0].positives.push(animal.positives[i]);
@@ -163,13 +161,13 @@ function updateAnimal(collection,
             collection.update({ name: animalName}, docs[0], { upsert: true });
         }
         
-        redirectCB(res, '/');
+        redirectCB(res, '/animal_added');
         return;
     });
 }
 
 exports.postAnimal = function(req, res) {
-    console.log(req.body);
+//    console.log(req.body);
     
     updateAnimal(mongo.db.a2, req, res, redirect);
 };

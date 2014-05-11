@@ -15,21 +15,21 @@ html(lang="en")
 				// Wrapper for slides
 				.carousel-inner
 					.item.active
-						img(src="images/elephant.png" max-height="160px", max-width="300px", alt="animal guess game 20 questions")
+						img(src="images/elephant.png" max-height="160px", max-width="300px", alt="animal guess game guessing")
 						.container
 							.carousel-caption
 								.span6
 									label.label-info Is it considered intelligent?
 								label.label-success Yes
 					.item
-						img(src="images/rhino.png" max-height="160px", max-width="300px",alt="animal guess game 20 questions")
+						img(src="images/rhino.png" max-height="160px", max-width="300px",alt="animal guess game guessing")
 						.container
 							.carousel-caption
 								.span6
 									label.label-info Does it live in Africa?
 								label.label-success Yes
 					.item
-						img(src="images/cat.png" max-height="160px",max-width="300px", alt="animal guess game 20 questions")
+						img(src="images/cat.png" max-height="160px",max-width="300px", alt="animal guess game guessing")
 						.container
 							.carousel-caption
 								.span6
@@ -43,19 +43,24 @@ html(lang="en")
 			div.jumbotron
 				a(class="btn btn-primary btn-lg" href='/newgame') Play Game
 				h2 Think of an animal and play the game! 
-				h4 AnimalGuess will ask questions to guess the animal. A great game to play with children!
+				h4 
+					p 
+						| Think of an animal. Can AnimalGuess guess your animal by asking questions? 
+				h4 
+					p 
+						| If AnimalGuess cannot correctly guess your animal then AnimalGuess will learn from its mistakes and be more likely to  know the next time.
 
-		p
-		div.container
-			div.jumbotron
-				div.row
-					div.col-sm-6
-						a(class="btn btn-primary btn-lg" href='/animal') Add Animal
-						h4
-							p Help improve AnimalGuess by adding an animal.
-					div.col-sm-6
-						a(class="btn btn-primary btn-lg" href='/question') Add Question
-						h4
-							p Help improve AnimalGuess by adding a question.
+		//- p
+		//- div.container
+			//- div.jumbotron
+				//- div.row
+					//- div.col-sm-6
+						//- a(class="btn btn-primary btn-lg" href='/animal') Add Animal
+						//- h4
+							//- p Help improve AnimalGuess by adding an animal.
+					//- div.col-sm-6
+						//- a(class="btn btn-primary btn-lg" href='/question') Add Question
+						//- h4
+							//- p Help improve AnimalGuess by adding a question.
 
 	include includes/footer

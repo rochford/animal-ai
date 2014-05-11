@@ -37,7 +37,7 @@ app.configure(function(){
     app.use(function (req, res, next) {
         if ('/robots.txt' == req.url) {
             res.type('text/plain')
-            res.send("User-agent: *\nAllow: /\nDisallow: /css/\nDisallow: /lib/\nDisallow: /bootstrap/\nDisallow: /game\nDisallow: /animal\nDisallow: /question\nDisallow: /guess");
+            res.send("User-agent: *\nAllow: /\nDisallow: /css/\nDisallow: /lib/\nDisallow: /bootstrap/\nDisallow: /game\nDisallow: /animal\nDisallow: /question\nDisallow: /guess\nDisallow: /animal_added");
         } else {
             next();
         }
@@ -77,19 +77,25 @@ app.get('/dismiss', index.dismiss);
 app.get('/newgame', game.newgame);
 app.get('/game', game.game);
 app.get('/won', game.won);
+
 app.get('/lost', game.lost);
+app.post('/lostaddanimal', game.postLostAddAnimal);
+
 app.get('/yes', game.yes);
 app.get('/no', game.no);
+
+app.get('/animal_added', index.animal_added);
 
 app.get('/guessyes', guess.guessyes);
 app.get('/guessno', guess.guessno);
 app.get('/guess', guess.guess);
 
-app.get('/question', addquestion.question);
-app.post('/question', addquestion.postQuestion);
+// app.get('/question', addquestion.question);
+// app.post('/question', addquestion.postQuestion);
 
-app.get('/animal', addanimal.animal);
-app.post('/animal', addanimal.postAnimal);
+// Disabled for now.
+// app.get('/animal', addanimal.animal);
+// app.post('/animal', addanimal.postAnimal);
 
 mongo.init(function (error) {
     if (error)

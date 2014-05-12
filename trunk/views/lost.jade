@@ -28,14 +28,15 @@ html(lang="en")
 										.span12
 											label.inline Animal Name
 												input(name='name',type='text',class="form-control",value="#{name}")
-										.span12
-											label.inline Please type a yes/no question that will distinguish your animal from a #{guess}.
-												input(name='question',type='text',class="form-control",value="#{question}")
-											label.inline No 
-												input(name='answer',type='radio',value='no', class='inline')
-											label.inline Yes 
-												input(name='answer',type='radio',value='yes')
-											label.text-info For example, if you were thinking of an African Elephant and the guess was an Indian elephant, then a good question might be 'Does it live in Africa?' and you would select 'Yes' as that is the correct answer for the animal you were thinking of.
+										- if(guess)
+											.span12
+												label.inline Please type a yes/no question that will distinguish your animal from a #{guess}.
+													input(name='question',type='text',class="form-control",value="#{question}")
+												label.inline No 
+													input(name='answer',type='radio',value='no', class='inline')
+												label.inline Yes 
+													input(name='answer',type='radio',value='yes')
+												label.text-info For example, if you were thinking of an African Elephant and the guess was an Indian elephant, then a good question might be 'Does it live in Africa?' and you would select 'Yes' as that is the correct answer for the animal you were thinking of.
 		
 										div.span12
 											input(name='submit',type='submit',class="btn btn-primary").submit-button

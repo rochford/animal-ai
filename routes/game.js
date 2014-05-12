@@ -174,21 +174,23 @@ function updateAnimal(collection,
     if (!req.body.name.toLowerCase()) {
         alerts.push('No animal name submitted.');
     }
-    if (!req.body.question.toLowerCase()) {
-        alerts.push('No question submitted.');
-    }
-    var answer = req.body['answer'];
-    if (answer != 'no' && answer != 'yes') {
-        alerts.push('Please answer the question by selecting No or Yes.');
+    if (req.cookies.guess) {
+        if (!req.body.question.toLowerCase()) {
+            alerts.push('No question submitted.');
+        }
+        var answer = req.body['answer'];
+        if (answer != 'no' && answer != 'yes') {
+            alerts.push('Please answer the question by selecting No or Yes.');
+        }
+    
+        var question = req.body.question.toLowerCase().trim();
+        var err = parseQuestion(question);
+        if (err) {
+            alerts.push('Bad question: ' + err);
+        }
     }
 
-    var question = req.body.question.toLowerCase().trim();
-    var err = parseQuestion(question);
-    if (err) {
-        alerts.push('Bad question: ' + err);
-    }
-    
-//    console.log(alerts);
+    //    console.log(alerts);
     if (alerts.length) {
         res.render('lost', { path: req.path,
                        alerts: alerts,
@@ -246,15 +248,17 @@ function updateAnimal(collection,
     animal.positives = _.uniq(animal.positives);
     animal.negatives = _.uniq(animal.negatives);
 
-    if (!addedToPositives) {
-        collection.update({ name: req.cookies.guess.toLowerCase() },
-                             { $addToSet: { positives: req.body['question']  },
-                               $pull: { negatives: req.body['question']  }});
-    } else {
-        console.log("addedTo negatives");
-        collection.update({ name: req.cookies.guess.toLowerCase() },
-                             { $addToSet: { negatives: req.body['question']  },
-                               $pull: { positives: req.body['question']  }});
+    if (req.cookies.guess) {
+        if (!addedToPositives) {
+            collection.update({ name: req.cookies.guess.toLowerCase() },
+                                 { $addToSet: { positives: req.body['question']  },
+                                   $pull: { negatives: req.body['question']  }});
+        } else {
+            console.log("addedTo negatives");
+            collection.update({ name: req.cookies.guess.toLowerCase() },
+                                 { $addToSet: { negatives: req.body['question']  },
+                                   $pull: { positives: req.body['question']  }});
+        }
     }
 
     collection.find( { name: animalName}, function(err, docs) {

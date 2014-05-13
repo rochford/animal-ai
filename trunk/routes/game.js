@@ -34,6 +34,9 @@ function parseQuestion(q) {
         return "Question is too long. Shorten the question.";
     if (q && q.indexOf('?') === -1)
         return "No question mark '?'. Add a question mark at the end.";
+    var profanity = utils.profanityCheck(q);
+    if (profanity)
+        return "Question failed profanity check. Please alter question.";
     return "";
 }
 
@@ -170,9 +173,13 @@ function updateAnimal(collection,
 
     var qAndA = utils.getQuestionsAndAnswers(data);
     
+    var animalName = req.body.name.toLowerCase().trim();
     var alerts = [];
-    if (!req.body.name.toLowerCase()) {
+    if (!animalName) {
         alerts.push('No animal name submitted.');
+    }
+    if (utils.profanityCheck(animalName)) {
+        alerts.push('Animal name contained profanity.');
     }
     if (req.cookies.guess) {
         if (!req.body.question.toLowerCase()) {

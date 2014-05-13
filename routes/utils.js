@@ -16,6 +16,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with Animal AI.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+var swearjar = require('swearjar');
+
 var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
 var COOKIE_QUESTIONNUMBER    = 'questionnumber';
 var COOKIE_GUESS             = 'guess';
@@ -27,6 +30,11 @@ exports.COOKIE_QUESTIONNUMBER = COOKIE_QUESTIONNUMBER;
 exports.COOKIE_GUESS = COOKIE_GUESS;
 exports.COOKIE_CURRENT_QUESTION = COOKIE_CURRENT_QUESTION;
 exports.COOKIE_POLICY = COOKIE_POLICY;
+
+exports.profanityCheck = function profanityCheck(text) {
+    //console.log(swearjar.scorecard(text));
+    return swearjar.profane(text);
+}
 
 exports.printCookies = function printCookies(req) {
     /*

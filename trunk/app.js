@@ -16,6 +16,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with Animal AI.  If not, see <http://www.gnu.org/licenses/>.
 */
+"use strict"
 
 var express = require('express')
 , index = require('./routes/index.js')
@@ -43,6 +44,7 @@ app.configure(function(){
         }
     });
     
+    app.use(express.compress());
     app.use(express.cookieParser(process.env.COOKIE_SECRET));
     app.use(express.session({secret: process.env.COOKIE_SECRET + '1234567890QWERTY'}));
     app.use(express.urlencoded()); // to support URL-encoded bodies

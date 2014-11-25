@@ -1,5 +1,6 @@
 {
   "name": "animal-ai",
+  "description": "Animal Guessing game",
   "version": "0.0.3",
   "private": true,
   "scripts": {
@@ -12,5 +13,9 @@
     "jade": "*",
     "mongojs": "0.10.1",
     "swearjar": "0.1.1"
-  }
+  },
+  "devDependencies": {
+        "nodeunit": "0.8.6",
+        "mockery": "1.4.0"
+    }
 }

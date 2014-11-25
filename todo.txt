@@ -1,7 +1,10 @@
+# unit test environment - mock require() libs
 # more test cases required.
 # remove bad characters from input
+# mongodb injection attack checking & tests
 # research neural networks in node.js
 # consider an "unknown"/"I don't know"/"sometimes" answer besides Yes/no
-# rethink callbacks
+# rethink callbacks - less nesting?
 # somehow list existing animals.
 # report incorrect postive/negative values for an animal?
+# switch to github

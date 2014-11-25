@@ -19,13 +19,68 @@
 "use strict"
 
 // module under test
-var game = require('./game.js');
 
-var _ = require('underscore');
-var utils = require('./utils.js');
-var mongo = require('./mongo.js');
+var mockery = require('mockery'),
+    game = require('./game.js');
 
+function redirect(res, page) {
+    console.log('redirect: ' + page);
+}
 
+function render(res, questionnumber, question, qAndA) {
+    console.log('question: ' + question);
+}
+
+var aggregateState = 1;
+
+var dbObject = {
+    testAnimals: {
+        aggregate: function(array, callback) {
+            console.log("aggregate");
+            if (aggregateState++ === 1) {
+                callback(null, [{_id: "Is it a predator?", number: 2},
+                                {_id: "Can it jump?", number: 2},
+                                {_id: "Does it live in water?", number: 1}]);
+            } else {
+                callback(null, [{_id: "Does it live in water?", number: 1},
+                                {_id: "Is it slimy?", number: 1}]);
+            }
+
+        },
+
+        find: function(query, callback) {
+            console.log(query);
+            callback(null, [
+                         {  name: "frog",
+                             positives: [
+                                 "Does it live in water?",
+                                 "Is it a predator?",
+                                 "Can it jump?"
+                             ],
+                             negatives: [
+                                 "Is it slimy?"
+                             ] },
+                         {  name: "lion",
+                             positives: [
+                                 "Is it a predator?",
+                                 "Can it jump?"
+                             ],
+                             negatives: [
+                                 "Does it live in water?"
+                             ] }
+                     ]
+                     );
+        }
+    }
+}
+
+var mongoMock = {
+    connect: function (x, y) { console.log('connect'); return dbObject; }
+};
+
+var utilMock = {
+    forceRefresh: function (res) { console.log('forceRefresh'); }
+};
 var cookiePot = [];
 var db;
 var req = { "cookies" : { 
@@ -36,49 +91,45 @@ var res = {
     cookie : function(k,v,extras) { cookiePot[k]=v;}
 };
 
-function setup() {
-    cookiePot = [];
-    var databaseUrl = "test"; // "username:password@example.com/mydb"
-    var collections = ["testQuestions","testAnimals"];
-    db = require("mongojs").connect(databaseUrl, collections);
-    
-    db.testAnimals.remove({});
-    db.testAnimals.insert({  name: "frog",
-                              positives: [
-                                  "Does it live in water?",
-                                  "Is it a predator?",
-                                  "Can it jump?"
-                              ],
-                              negatives: [
-                                  "Is it slimy?"
-                              ] });
-    db.testAnimals.insert({  name: "lion",
-                              positives: [
-                                  "Is it a predator?",
-                                  "Can it jump?"
-                              ],
-                              negatives: [
-                                  "Does it live in water?"
-                              ] });
-}
+var utils, mongo;
 
-function redirect(res, page) {
-    console.log('redirect: ' + page);
-}
+module.exports = {
+    setUp: function (callback) {
+        console.log('setup');
+        mockery.registerAllowable('underscore');
+        mockery.registerAllowable('./game.js');
+        mockery.registerMock('./mongo.js', mongoMock);
+        mockery.registerMock('./utils.js', utilMock);
 
-function render(res, questionnumber, question, qAndA) {
-    console.log('question: ' + question);
-}
+        mockery.enable();
+        var _ = require('underscore');
+        utils = require('./utils.js');
+        mongo = require('./mongo.js');
+        callback();
+    },
+    tearDown: function (callback) {
+        // clean up
+        console.log('teardown');
+        mockery.deregisterAll();
+        mockery.disable();
+        callback();
+    },
+    test1: function (test) {
+        console.log('test1');
+        test.expect(2);
+        var databaseUrl = "test"; // "username:password@example.com/mydb"
+        var collections = ["testQuestions","testAnimals"];
+        var db = mongo.connect(databaseUrl, collections);
 
-exports.nextQuestion = function(test)  {
-    test.expect(2);
-    setup();
-    game.nextQuestion(db.testAnimals, req, res, redirect, 
-                      function(req, res, questionnumber, question, qAndA) {
-                          console.log(question);
-                          console.log(questionnumber);
-                          test.strictEqual(question, "Does it live in water?");
-                          test.strictEqual(questionnumber, 1);
-                          test.done();
-                      });
-}
+        game.nextQuestion(db.testAnimals, req, res, redirect,
+                          function(req, res, questionnumber, question, qAndA) {
+                              console.log(question);
+                              console.log(questionnumber);
+                              test.strictEqual(question, "Does it live in water?");
+                              test.strictEqual(questionnumber, 1);
+                              test.done();
+                          });
+    }
+};
+
+

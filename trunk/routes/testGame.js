@@ -16,12 +16,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with Animal AI.  If not, see <http://www.gnu.org/licenses/>.
 */
-"use strict"
+"use strict";
 
-// module under test
 
 var mockery = require('mockery'),
-    game = require('./game.js');
+    game = require('./game.js'); // module under test
 
 function redirect(res, page) {
     console.log('redirect: ' + page);
@@ -75,18 +74,18 @@ var dbObject = {
 }
 
 var mongoMock = {
-    connect: function (x, y) { console.log('connect'); return dbObject; }
+    connect: function () { console.log('connect'); return dbObject; }
 };
 
 var utilMock = {
-    forceRefresh: function (res) { console.log('forceRefresh'); }
+    forceRefresh: function () { console.log('forceRefresh'); }
 };
 var cookiePot = [];
 var db;
-var req = { "cookies" : { 
+var req = { "cookies" : {
         "questionnumber":0,
         "questionsanswers": ""}};
-var res = { 
+var res = {
     clearCookie : function(name) { },
     cookie : function(k,v,extras) { cookiePot[k]=v;}
 };
@@ -97,6 +96,7 @@ module.exports = {
     setUp: function (callback) {
         console.log('setup');
         mockery.registerAllowable('underscore');
+        mockery.registerAllowable('util');
         mockery.registerAllowable('./game.js');
         mockery.registerMock('./mongo.js', mongoMock);
         mockery.registerMock('./utils.js', utilMock);

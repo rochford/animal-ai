@@ -16,34 +16,34 @@
     You should have received a copy of the GNU Lesser General Public License
     along with Animal AI.  If not, see <http://www.gnu.org/licenses/>.
 */
-"use strict"
+"use strict";
 
-var express = require('express')
-, index = require('./routes/index.js')
-, game = require('./routes/game.js')
-, guess = require('./routes/guess.js')
-, addquestion = require('./routes/addquestion.js')
-, addanimal = require('./routes/addanimal.js')
-, http = require('http')
-, path = require('path');
-var _ = require('underscore');
-var utils = require('./routes/utils.js')
-var mongo = require('./routes/mongo.js');
+var express = require('express'),
+    index = require('./routes/index.js'),
+    game = require('./routes/game.js'),
+    guess = require('./routes/guess.js'),
+    addquestion = require('./routes/addquestion.js'),
+    addanimal = require('./routes/addanimal.js'),
+    http = require('http'),
+    path = require('path'),
+    _ = require('underscore'),
+    utils = require('./routes/utils.js'),
+    mongo = require('./routes/mongo.js');
 var app = express();
 
-app.configure(function(){
+app.configure(function() {
     app.set('port', process.env.PORT || 3000);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
     app.use(function (req, res, next) {
-        if ('/robots.txt' == req.url) {
-            res.type('text/plain')
+        if ('/robots.txt' === req.url) {
+            res.type('text/plain');
             res.send("User-agent: *\nAllow: /\nDisallow: /css/\nDisallow: /lib/\nDisallow: /bootstrap/\nDisallow: /game\nDisallow: /animal\nDisallow: /question\nDisallow: /guess\nDisallow: /animal_added");
         } else {
             next();
         }
     });
-    
+
     app.use(express.compress());
     app.use(express.cookieParser(process.env.COOKIE_SECRET));
     app.use(express.session({secret: process.env.COOKIE_SECRET + '1234567890QWERTY'}));
@@ -52,11 +52,12 @@ app.configure(function(){
     app.use(express.logger('dev'));
     app.use(function (req, res, next) {
         var ip = utils.getClientIp(req);
-        
-        if (ip === process.env.DEV_IP)
+
+        if (ip === process.env.DEV_IP) {
             req.session.analytics = false;
-        else
+        } else {
             req.session.analytics = true;
+        }
         next();
     });
 
@@ -67,7 +68,7 @@ app.configure(function(){
 });
 
 
-app.configure('development', function(){
+app.configure('development', function () {
     app.use(express.errorHandler());
 });
 
@@ -100,24 +101,25 @@ app.get('/guess', guess.guess);
 // app.post('/animal', addanimal.postAnimal);
 
 mongo.init(function (error) {
-    if (error)
+    if (error) {
         throw error;
+    }
 
-    if (!process.env.PORT ) {
+    if (!process.env.PORT) {
         console.error('No port defined');
         return;
     }
 
-    if (!process.env.COOKIE_SECRET ) {
+    if (!process.env.COOKIE_SECRET) {
         console.error('No COOKIE_SECRET defined');
         return;
     }
-    if (!process.env.MONGO_SERVER_URL ) {
+    if (!process.env.MONGO_SERVER_URL) {
         console.error('No MONGO_SERVER_URL defined');
         return;
     }
-    
-    http.createServer(app).listen(app.get('port'), function(){
+
+    http.createServer(app).listen(app.get('port'), function () {
         console.log("Express server listening on port " + app.get('port'));
     });
 });

@@ -16,13 +16,13 @@
     You should have received a copy of the GNU Lesser General Public License
     along with Animal AI.  If not, see <http://www.gnu.org/licenses/>.
 */
-"use strict"
+"use strict";
 
 var mongodb = require('mongojs');
 
 module.exports.init = function (callback) {
-    var databaseUrl = process.env.MONGO_SERVER_URL; // "username:password@example.com/mydb"
-    var collections = ["questions","a2"];
+    var databaseUrl = process.env.MONGO_SERVER_URL, // "username:password@example.com/mydb"
+        collections = ["questions", "a2"];
     module.exports.db = require("mongojs").connect(databaseUrl, collections);
     callback();
 }

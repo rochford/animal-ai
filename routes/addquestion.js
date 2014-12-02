@@ -16,54 +16,58 @@
     You should have received a copy of the GNU Lesser General Public License
     along with Animal AI.  If not, see <http://www.gnu.org/licenses/>.
 */
-"use strict"
+"use strict";
 
-var _ = require('underscore');
-var utils = require('./utils.js');
-var mongo = require('./mongo.js');
+var _ = require('underscore'),
+    utils = require('./utils.js'),
+    mongo = require('./mongo.js');
 
-var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
-var COOKIE_GUESS             = 'guess';
-var COOKIE_CURRENT_QUESTION  = 'currentquestion';
+var COOKIE_QUESTIONSANSWERS  = 'questionsanswers',
+    COOKIE_GUESS             = 'guess',
+    COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
 var MAX_QUESTION_LENGTH = 60;
 var MIN_QUESTION_LENGTH = 5;
 
 function parseQuestion(q) {
-    if(!q)
+    if (!q) {
         return "No question";
-    if (q.length < MIN_QUESTION_LENGTH)
+    }
+    if (q.length < MIN_QUESTION_LENGTH) {
         return "Question is too short";
-    if (q.length > MAX_QUESTION_LENGTH)
+    }
+    if (q.length > MAX_QUESTION_LENGTH) {
         return "Question is too long";
-    if (q.indexOf('?') === -1)
+    }
+    if (q.indexOf('?') === -1) {
         return "No question mark";
+    }
     return "";
 }
 
-exports.question = function(req, res) {
+exports.question = function (req, res) {
     console.log("app.get(/question) " + utils.printCookies(req));
 
-    res.render('question', { pageTitle: 'Add Question',
+    res.render('question', {pageTitle: 'Add Question',
                dismiss: utils.cookieUsageWarning(req),
                analytics: req.session.analytics});
 };
 
-exports.postQuestion = function(req, res) {
+exports.postQuestion = function (req, res) {
     console.log(utils.printCookies(req));
 
-    var question = req.body.newquestion.toLowerCase().trim();
-    var err = parseQuestion(question);
+    var question = req.body.newquestion.toLowerCase().trim(),
+        err = parseQuestion(question);
     if (err) {
 
-        res.render('error', { pageTitle: 'Error',
+        res.render('error', {pageTitle: 'Error',
                        errorReason: 'Bad question: ' + err,
                    dismiss: utils.cookieUsageWarning(req),
                    analytics: req.session.analytics});
         return;
     }
 
-    mongo.db.questions.insert( { q: question});
+    mongo.db.questions.insert({q: question});
 
     utils.forceRefresh(res);
     res.redirect('/');

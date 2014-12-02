@@ -16,15 +16,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with Animal AI.  If not, see <http://www.gnu.org/licenses/>.
 */
-"use strict"
+"use strict";
 
 var swearjar = require('swearjar');
 
-var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
-var COOKIE_QUESTIONNUMBER    = 'questionnumber';
-var COOKIE_GUESS             = 'guess';
-var COOKIE_CURRENT_QUESTION  = 'currentquestion';
-var COOKIE_POLICY            = 'cookiepolicy';
+var COOKIE_QUESTIONSANSWERS  = 'questionsanswers',
+    COOKIE_QUESTIONNUMBER    = 'questionnumber',
+    COOKIE_GUESS             = 'guess',
+    COOKIE_CURRENT_QUESTION  = 'currentquestion',
+    COOKIE_POLICY            = 'cookiepolicy';
 
 exports.COOKIE_QUESTIONSANSWERS = COOKIE_QUESTIONSANSWERS;
 exports.COOKIE_QUESTIONNUMBER = COOKIE_QUESTIONNUMBER;
@@ -73,7 +73,7 @@ exports.cookieUsageWarning = function cookieUsageWarning(req){
     if (req.cookies.cookiepolicy && req.cookies.cookiepolicy == 'OK')
         dismiss = true;
     console.log("cookieUsageWarning: dismiss: " + dismiss);
-    return dismiss;    
+    return dismiss;
 }
 
 exports.getQuestionsAndAnswers = function getQuestionsAndAnswers(data)  {

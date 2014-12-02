@@ -16,26 +16,25 @@
     You should have received a copy of the GNU Lesser General Public License
     along with Animal AI.  If not, see <http://www.gnu.org/licenses/>.
 */
-"use strict"
+"use strict";
 
-var _ = require('underscore');
-var utils = require('./utils.js');
-var mongo = require('./mongo.js');
+var _ = require('underscore'),
+    utils = require('./utils.js'),
+    mongo = require('./mongo.js');
 
 var COOKIE_QUESTIONSANSWERS  = 'questionsanswers';
 var COOKIE_GUESS             = 'guess';
 var COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
-exports.guess = function(req, res) {
+exports.guess = function (req, res) {
 //    console.log("app.get(/guess) " + utils.printCookies(req));
-    var questionnumber = Number(req.cookies.questionnumber);
+    var questionnumber = Number(req.cookies.questionnumber),
+        yesNoArray = utils.getQandA(req),
+        qAndA = yesNoArray[0];
 
     res.cookie(utils.COOKIE_QUESTIONNUMBER, questionnumber + 1, { });
 
-    var yesNoArray = utils.getQandA(req);
-    var qAndA = yesNoArray[0];
-
-    res.render('guess', { pageTitle: 'Guess', 
+    res.render('guess', {pageTitle: 'Guess',
                    questionNumber: questionnumber,
                    qAndAValue: qAndA,
                    guess: req.cookies.guess.toLowerCase(),
@@ -43,14 +42,14 @@ exports.guess = function(req, res) {
                analytics: req.session.analytics});
 };
 
-exports.guessyes = function(req, res) {
+exports.guessyes = function (req, res) {
 //    console.log("guessyes" + utils.printCookies(req));
 
     var data = req.cookies.questionsanswers;
     if (!data) {
         utils.forceRefresh(res);
 
-        res.render('error', { pageTitle: 'Error',
+        res.render('error', {pageTitle: 'Error',
                        errorReason: 'Cannot guess as no questions answered',
                    dismiss: utils.cookieUsageWarning(req),
                    analytics: req.session.analytics});
@@ -59,30 +58,33 @@ exports.guessyes = function(req, res) {
 
     // update the db
     var numberOfQuestions = data.split("&");
-    mongo.db.a2.find({ name: req.cookies.guess.toLowerCase() }, function(err, animal) {
-        if( err || !animal || animal.length === 0) {
+    mongo.db.a2.find({ name: req.cookies.guess.toLowerCase() }, function (err, animal) {
+        var i, tmp, q;
+        if (err || !animal || animal.length === 0) {
 //            console.log("No animal found to update ");
             utils.forceRefresh(res);
             res.redirect('/');
             return;
         }
 
-        for (var i = 0; i < numberOfQuestions.length; i++) {
-            var tmp = numberOfQuestions[i].split('=');
-            var q = tmp[0] + "";
-            if (q == "")
+        for (i = 0; i < numberOfQuestions.length; i = i + 1) {
+            tmp = numberOfQuestions[i].split('=');
+            q = tmp[0] + '';
+            if (q === "") {
                 continue;
-            if (tmp[1] === 'yes')
+            }
+            if (tmp[1] === 'yes') {
                 animal[0].positives.push(q);
-            else if (tmp[1] === 'no')
+            } else if (tmp[1] === 'no') {
                 animal[0].negatives.push(q);
+            }
         }
         // remove duplicates
         animal[0].negatives = _.uniq(animal[0].negatives);
         animal[0].positives = _.uniq(animal[0].positives);
-        
-//        console.log(animal[0]);
-        mongo.db.a2.update({ name: req.cookies.guess.toLowerCase() }, animal[0], {multi:false},function() {
+
+        //        console.log(animal[0]);
+        mongo.db.a2.update({name: req.cookies.guess.toLowerCase() }, animal[0], {multi: false}, function () {
             utils.forceRefresh(res);
             res.redirect('/won');
             return;
@@ -91,8 +93,7 @@ exports.guessyes = function(req, res) {
 
 };
 
-
-exports.guessno = function(req, res) {
+exports.guessno = function (req, res) {
 //    console.log("guessno", utils.printCookies(req));
     utils.forceRefresh(res);
     res.redirect('/lost');

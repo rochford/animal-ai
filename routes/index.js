@@ -16,57 +16,55 @@
     You should have received a copy of the GNU Lesser General Public License
     along with Animal AI.  If not, see <http://www.gnu.org/licenses/>.
 */
-"use strict"
+"use strict";
 
-var _ = require('underscore');
-var utils = require('./utils.js');
-var mongo = require('./mongo.js');
+var _ = require('underscore'),
+    utils = require('./utils.js'),
+    mongo = require('./mongo.js');
 
-exports.dismiss = function(req, res){
+exports.dismiss = function (req, res) {
     res.cookie(utils.COOKIE_POLICY, 'OK', { });
     res.redirect(req.get('referer'));
 };
 
-exports.animal_added = function(req, res){
+exports.animal_added = function (req, res) {
 //    console.log("app.get(/animal_added) " + utils.printCookies(req));
     utils.clearCookies(res);
     utils.resetCookies(res);
 
-    res.render('animal_added', { path: req.path, pageTitle: 'Animal Added',
+    res.render('animal_added', {path: req.path, pageTitle: 'Animal Added',
                dismiss: utils.cookieUsageWarning(req),
                analytics: req.session.analytics});
 };
 
-exports.about = function(req, res){
+exports.about = function (req, res) {
 //    console.log("app.get(/about) " + utils.printCookies(req));
     utils.clearCookies(res);
     utils.resetCookies(res);
 
-    res.render('about', { path: req.path, pageTitle: 'About AnimalGuess',
+    res.render('about', {path: req.path, pageTitle: 'About AnimalGuess',
                dismiss: utils.cookieUsageWarning(req),
                analytics: req.session.analytics});
 };
 
-exports.error = function(req, res){
+exports.error = function (req, res) {
 //    console.log("app.get(/error) " + utils.printCookies(req));
     utils.clearCookies(res);
     utils.resetCookies(res);
 
-    res.render('error', { pageTitle: 'Error',
+    res.render('error', {pageTitle: 'Error',
                dismiss: utils.cookieUsageWarning(req),
                analytics: req.session.analytics});
 };
 
-exports.index =  function(req, res){
+exports.index =  function (req, res) {
 //    console.log("app.get(/index) ");
     utils.printCookies(req);
     utils.clearCookies(res);
     utils.resetCookies(res);
 
-    res.render('index', { path: req.path, 
+    res.render('index', { path: req.path,
                            pageTitle: 'Animal Guess',
                            dismiss: utils.cookieUsageWarning(req),
                analytics: req.session.analytics});
 }
-
-

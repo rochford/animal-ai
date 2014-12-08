@@ -23,14 +23,12 @@ var swearjar = require('swearjar');
 var COOKIE_QUESTIONSANSWERS  = 'questionsanswers',
     COOKIE_QUESTIONNUMBER    = 'questionnumber',
     COOKIE_GUESS             = 'guess',
-    COOKIE_CURRENT_QUESTION  = 'currentquestion',
-    COOKIE_POLICY            = 'cookiepolicy';
+    COOKIE_CURRENT_QUESTION  = 'currentquestion';
 
 exports.COOKIE_QUESTIONSANSWERS = COOKIE_QUESTIONSANSWERS;
 exports.COOKIE_QUESTIONNUMBER = COOKIE_QUESTIONNUMBER;
 exports.COOKIE_GUESS = COOKIE_GUESS;
 exports.COOKIE_CURRENT_QUESTION = COOKIE_CURRENT_QUESTION;
-exports.COOKIE_POLICY = COOKIE_POLICY;
 
 exports.profanityCheck = function profanityCheck(text) {
     //console.log(swearjar.scorecard(text));
@@ -60,7 +58,6 @@ exports.clearCookies = function clearCookies(res) {
     res.clearCookie(COOKIE_CURRENT_QUESTION);
 }
 
-
 exports.resetCookies = function resetCookies(res) {
     res.cookie(COOKIE_QUESTIONNUMBER, 1, { });
     res.cookie(COOKIE_GUESS, '', { });
@@ -70,9 +67,8 @@ exports.resetCookies = function resetCookies(res) {
 
 exports.cookieUsageWarning = function cookieUsageWarning(req){
     var dismiss = false;
-    if (req.cookies.cookiepolicy && req.cookies.cookiepolicy == 'OK')
+    if (req.session.cookieUsageWarning && req.session.cookieUsageWarning === 'OK')
         dismiss = true;
-    console.log("cookieUsageWarning: dismiss: " + dismiss);
     return dismiss;
 }
 
@@ -123,5 +119,3 @@ exports.getClientIp = function getClientIp(req) {
   }
   return ipAddress;
 };
-
-

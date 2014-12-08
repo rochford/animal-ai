@@ -10,4 +10,4 @@ cd web/
 svn checkout http://animal-ai.googlecode.com/svn/trunk/ animal-ai-read-only
 cd animal-ai-read-only
 npm install
-nohup sudo PORT=80 COOKIE_SECRET='foobar' MONGO_SERVER_URL='x.x.x.x:27017/test' DEV_IP='127.0.0.1' node app.js &
+nohup sudo PORT=80 COOKIE_SECRET='foobar' MONGO_SERVER_URL='mongodb://x.x.x.x:27017/test' DEV_IP='127.0.0.1' node app.js &

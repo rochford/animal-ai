@@ -23,7 +23,9 @@ var _ = require('underscore'),
     mongo = require('./mongo.js');
 
 exports.dismiss = function (req, res) {
-    res.cookie(utils.COOKIE_POLICY, 'OK', { });
+    var session = req.session;
+    session.cookieUsageWarning = 'OK';
+    console.log('cookie usage warning OK');
     res.redirect(req.get('referer'));
 };
 

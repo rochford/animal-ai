@@ -1,4 +1,3 @@
-# unit test environment - mock require() libs
 # more test cases required.
 # remove bad characters from input
 # mongodb injection attack checking & tests

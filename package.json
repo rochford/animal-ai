@@ -4,16 +4,17 @@
     "version": "0.0.3",
     "private": true,
     "scripts": {
-        "start": "PORT=3000 COOKIE_SECRET='sdfd' MONGO_SERVER_URL='127.0.0.1:27017/test' node app.js",
-        "test": "nodeunit routes/testGame.js"
+        "start": "PORT=3000 COOKIE_SECRET='sdfd' MONGO_SERVER_URL='mongodb://localhost:27017/test' node app.js",
+        "test": "nodeunit test/test*.js"
     },
     "dependencies": {
         "nodeunit": "0.8.6",
         "express": "3.0.6",
         "underscore": "1.6.0",
-        "jade": "*",
+        "jade": "1.7.0",
         "mongojs": "0.10.1",
-        "swearjar": "0.1.1"
+        "swearjar": "0.1.1",
+        "connect-mongo": "0.4.1"
     },
     "devDependencies": {
         "nodeunit": "0.8.6",

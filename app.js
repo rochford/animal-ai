@@ -28,7 +28,9 @@ var express = require('express'),
     path = require('path'),
     _ = require('underscore'),
     utils = require('./routes/utils.js'),
-    mongo = require('./routes/mongo.js');
+    mongo = require('./routes/mongo.js'),
+    MongoStore = require('connect-mongo')(express);
+
 var app = express();
 
 app.configure(function() {
@@ -46,7 +48,13 @@ app.configure(function() {
 
     app.use(express.compress());
     app.use(express.cookieParser(process.env.COOKIE_SECRET));
-    app.use(express.session({secret: process.env.COOKIE_SECRET + '1234567890QWERTY'}));
+    app.use(express.session({
+        secret: process.env.COOKIE_SECRET + '1234567890QWERTY',
+        cookie: { maxAge: new Date(Date.now() + 3600000*24*7*2) }, // 2 weeks
+        store: new MongoStore({ url: process.env.MONGO_SERVER_URL,
+                                collection: 'sessions'
+        })
+      }));
     app.use(express.urlencoded()); // to support URL-encoded bodies
     app.use(express.favicon());
     app.use(express.logger('dev'));
@@ -66,7 +74,6 @@ app.configure(function() {
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
 });
-
 
 app.configure('development', function () {
     app.use(express.errorHandler());
@@ -104,7 +111,6 @@ mongo.init(function (error) {
     if (error) {
         throw error;
     }
-
     if (!process.env.PORT) {
         console.error('No port defined');
         return;

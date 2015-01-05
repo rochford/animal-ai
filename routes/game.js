@@ -88,27 +88,21 @@ function nextQuestion(collection,
         yesQ = yesNoArray[1],
         noQ = yesNoArray[2];
 
-//    var questionnumber = Number(req.cookies.questionnumber);
     var numberOfQuestions = req.cookies.questionsanswers.split("&");
     var questionnumber = numberOfQuestions.length;
 
     var query = getQuery(yesQ, noQ);
 
-    //    console.log(query);
-
     collection.find(query, function (err, animal) {
         if (err || !animal) {
-            //            console.log("No animal found to update ");
             redirectCB(res, '/animal');
             return;
         } else if (animal.length === 1) {
-            //            console.log("Single animal found");
             res.clearCookie(COOKIE_GUESS);
             res.cookie(COOKIE_GUESS, animal[0].name, { });
             redirectCB(res, '/guess');
             return;
         } else {
-            //            console.log(animal);
             collection.aggregate(
                         [
                             { $match : query},
@@ -179,35 +173,38 @@ function updateAnimal(collection,
                       res,
                       redirectCB)
 {
-    utils.printCookies(req);
+    var loop;
     var data = req.cookies.questionsanswers;
 
     var qAndA = utils.getQuestionsAndAnswers(data);
 
     var animalName = req.body.name.toLowerCase().trim();
     var alerts = [];
+
+    utils.printCookies(req);
     if (!animalName) {
         alerts.push('No animal name submitted.');
     }
     if (utils.profanityCheck(animalName)) {
         alerts.push('Animal name contained profanity.');
     }
+
     if (req.cookies.guess) {
-        if (!req.body.question.toLowerCase()) {
+        if (!req.body.question) {
             alerts.push('No question submitted.');
-        }
-        var answer = req.body['answer'];
-        if (answer != 'no' && answer != 'yes') {
-            alerts.push('Please answer the question by selecting No or Yes.');
-        }
-        var question = req.body.question.toLowerCase().trim();
-        var err = parseQuestion(question);
-        if (err) {
-            alerts.push('Bad question: ' + err);
+        } else {
+            var answer = req.body['answer'];
+            if (answer !== 'no' && answer !== 'yes') {
+                alerts.push('Please answer the question by selecting Yes or No');
+            }
+            var question = req.body.question.toLowerCase().trim();
+            var err = parseQuestion(question);
+            if (err) {
+                alerts.push('Bad question: ' + err);
+            }
         }
     }
 
-    //    console.log(alerts);
     if (alerts.length) {
         res.render('lost', { path: req.path,
                        alerts: alerts,
@@ -220,17 +217,13 @@ function updateAnimal(collection,
         return;
     }
 
-//    var animalName = req.body.name.toLowerCase().trim();
-    var animal = {name: animalName,
-        positives: [],
-        negatives: []};
+    var animal = {name: animalName, positives: [], negatives: []};
 
     if (data) {
         var numberOfQuestions = data.split("&");
-        //        console.log("numberOfQuestions:" +  numberOfQuestions)
 
-        for (var i = 0; i < numberOfQuestions.length; i++) {
-            var tmp = numberOfQuestions[i].split('=');
+        for (loop = 0; loop < numberOfQuestions.length; loop++) {
+            var tmp = numberOfQuestions[loop].split('=');
             var q = tmp[0] + "";
             if (q === "") {
                 continue;
@@ -248,19 +241,19 @@ function updateAnimal(collection,
     }
 
     var addedToPositives = false;
-    for (i in req.body) {
-        if (i === 'name')
+    for (var i in req.body) {
+        if (i === 'name' || i === 'submit' ) {
             continue;
-        if (i === 'submit')
-            continue;
+        }
         if (i === 'answer') {
-            var a = req.body[i] == 'yes';
+            var a = req.body[i] === 'yes';
             if (a) {
                 addedToPositives = true;
                 animal.positives.push(req.body['question']);
             }
-            else
+            else {
                 animal.negatives.push(req.body['question']);
+            }
         }
     }
 
@@ -274,45 +267,58 @@ function updateAnimal(collection,
                               { $addToSet: {positives: req.body['question']  },
                                   $pull: {negatives: req.body['question']  }});
         } else {
-            console.log("addedTo negatives");
             collection.update({name: req.cookies.guess.toLowerCase() },
-                              { $addToSet: {negatives: req.body['question']  },
-                                  $pull: {positives: req.body['question']  }});
+                              { $addToSet: {negatives: req.body['question'] },
+                                  $pull: {positives: req.body['question'] }});
         }
     }
 
     collection.find({name: animalName}, function (err, docs) {
-
-        if( err || !docs || docs.length === 0) {
-            //            console.log("No animal found to update ");
-            mongo.db.a2.insert(animal);
+        if (err) {
+            console.log("No animal found to update ");
+            utils.forceRefresh(res);
+            res.render('error', {pageTitle: 'Error',
+                           errorReason: 'Database error',
+                       dismiss: utils.cookieUsageWarning(req),
+                       analytics: req.session.analytics});
+        } else if (!docs || docs.length === 0) {
+            console.log("No animal found to update - just insert.");
+            mongo.db.a2.insert(animal, function (err, doc) {
+                redirectCB(res, '/animal_added');
+            });
         } else if (docs.length === 1) {
-            //            console.log("Single animal found");
 
-            for (var i = 0; i < animal.positives.length; i++) {
-                docs[0].positives.push(animal.positives[i]);
+            for (loop = 0; loop < animal.positives.length; loop++) {
+                docs[0].positives.push(animal.positives[loop]);
             }
-            for (var i = 0; i < animal.negatives.length; i++) {
-                docs[0].negatives.push(animal.negatives[i]);
+            for (loop = 0; loop < animal.negatives.length; loop++) {
+                docs[0].negatives.push(animal.negatives[loop]);
             }
 
             docs[0].positives = _.uniq(docs[0].positives);
             docs[0].negatives = _.uniq(docs[0].negatives);
 
-            collection.update({ name: animalName}, docs[0], { upsert: true });
+            collection.update({name: animalName}, docs[0], {upsert: true}, function (err, lastErrorObject) {
+                redirectCB(res, '/animal_added');
+            });
+        } else {
+            // too many results - - must only be 1
+            utils.forceRefresh(res);
+            res.render('error', {pageTitle: 'Error',
+                           errorReason: 'Too many animals with same name',
+                       dismiss: utils.cookieUsageWarning(req),
+                       analytics: req.session.analytics});
         }
-
-        redirectCB(res, '/animal_added');
-        return;
     });
 }
 
-exports.postLostAddAnimal = function(req, res) {
-    // update the new animal first
+exports.updateAnimal = updateAnimal;
+
+exports.postLostAddAnimal = function (req, res) {
     updateAnimal(mongo.db.a2, req, res, redirect);
 };
 
-exports.lost = function(req, res) {
+exports.lost = function (req, res) {
     utils.printCookies(req);
     var data = req.cookies.questionsanswers;
 
@@ -328,7 +334,7 @@ exports.lost = function(req, res) {
                    analytics: req.session.analytics});
 };
 
-exports.won = function(req, res) {
+exports.won = function (req, res) {
     utils.printCookies(req);
     var data = req.cookies.questionsanswers;
 
@@ -341,14 +347,14 @@ exports.won = function(req, res) {
                    analytics: req.session.analytics});
 };
 
-exports.game = function(req, res) {
+exports.game = function (req, res) {
     utils.printCookies(req);
     utils.forceRefresh(res);
 
     nextQuestion(mongo.db.a2, req, res, redirect, render);
 };
 
-exports.newgame = function(req, res) {
+exports.newgame = function (req, res) {
     utils.printCookies(req);
     utils.clearCookies(res);
     utils.resetCookies(res);
@@ -357,7 +363,7 @@ exports.newgame = function(req, res) {
     res.redirect('/game');
 };
 
-exports.yes = function(req, res){
+exports.yes = function (req, res) {
     utils.printCookies(req);
 
     res.cookie('questionsanswers', req.cookies.questionsanswers +
@@ -367,7 +373,7 @@ exports.yes = function(req, res){
     res.redirect('/game');
 };
 
-exports.no = function(req, res){
+exports.no = function (req, res) {
     utils.printCookies(req);
 
     res.cookie('questionsanswers', req.cookies.questionsanswers +

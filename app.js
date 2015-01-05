@@ -22,7 +22,6 @@ var express = require('express'),
     index = require('./routes/index.js'),
     game = require('./routes/game.js'),
     guess = require('./routes/guess.js'),
-    addquestion = require('./routes/addquestion.js'),
     addanimal = require('./routes/addanimal.js'),
     http = require('http'),
     path = require('path'),
@@ -47,7 +46,7 @@ app.configure(function() {
     });
 
     app.use(express.compress());
-    app.use(express.cookieParser(process.env.COOKIE_SECRET));
+    app.use(express.cookieParser(process.env.COOKIE_SECRET || 'aij'));
     app.use(express.session({
         secret: process.env.COOKIE_SECRET + '1234567890QWERTY',
         cookie: { maxAge: new Date(Date.now() + 3600000*24*7*2) }, // 2 weeks
@@ -99,9 +98,6 @@ app.get('/animal_added', index.animal_added);
 app.get('/guessyes', guess.guessyes);
 app.get('/guessno', guess.guessno);
 app.get('/guess', guess.guess);
-
-// app.get('/question', addquestion.question);
-// app.post('/question', addquestion.postQuestion);
 
 // Disabled for now.
 // app.get('/animal', addanimal.animal);

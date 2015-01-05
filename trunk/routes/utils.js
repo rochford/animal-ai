@@ -65,10 +65,12 @@ exports.resetCookies = function resetCookies(res) {
     res.cookie(COOKIE_CURRENT_QUESTION, '', { });
 }
 
-exports.cookieUsageWarning = function cookieUsageWarning(req){
+exports.cookieUsageWarning = function cookieUsageWarning(req) {
     var dismiss = false;
-    if (req.session.cookieUsageWarning && req.session.cookieUsageWarning === 'OK')
+    if (req.session.cookieUsageWarning && req.session.cookieUsageWarning === 'OK') {
         dismiss = true;
+    }
+    console.log('cookieUsageWarning ' + dismiss);
     return dismiss;
 }
 

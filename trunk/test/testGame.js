@@ -19,21 +19,18 @@
 "use strict";
 
 var mockery = require('mockery'),
-    game = require('./../routes/game.js'); // module under test
+        game = require('./../routes/game.js'); // module under test
 
-function redirect(res, page) {
-    console.log('redirect: ' + page);
+// Mongo Database object - stores values to be verified in the tests
+function DatabaseObject(findResults) {
+    this.testAnimals.lastUpdatedDocument = undefined;
+    this.testAnimals.aggregateState = 0;
+    this.testAnimals.findResults = findResults;
 }
 
-function render(res, questionnumber, question, qAndA) {
-    console.log('question: ' + question);
-}
-
-var dbObject = {
-    aggregateState: 1,
+DatabaseObject.prototype = {
     testAnimals: {
-        aggregate: function(array, callback) {
-            console.log("aggregate");
+        aggregate: function (array, callback) {
             if (this.aggregateState++ === 1) {
                 callback(null, [{_id: "Is it a predator?", number: 2},
                                 {_id: "Can it jump?", number: 2},
@@ -43,68 +40,49 @@ var dbObject = {
                                 {_id: "Is it slimy?", number: 1}]);
             }
         },
-
-        find: function(query, callback) {
-            console.log(query);
-            callback(null, [
-                         {  name: "frog",
-                             positives: [
-                                 "Does it live in water?",
-                                 "Is it a predator?",
-                                 "Can it jump?"
-                             ],
-                             negatives: [
-                                 "Is it slimy?"
-                             ] },
-                         {  name: "lion",
-                             positives: [
-                                 "Is it a predator?",
-                                 "Can it jump?"
-                             ],
-                             negatives: [
-                                 "Does it live in water?"
-                             ] }
-                     ]
-                     );
+        update : function (name, newProperties, c, callback) {
+            this.lastUpdatedDocument = newProperties;
+            if (arguments.length === 4) {
+                callback(null, null);
+            }
+        },
+        find: function (query, callback) {
+            callback(null, this.findResults);
         }
     }
 }
 
-var dbObject2 = {
-    testAnimals: {
-        find: function(query, callback) {
-            console.log(query);
-            callback({error: "something"}, []);
-        }
-    }
+// Wrapper to return DatabaseObject
+function MongoMockNew (dbObj) {
+    this.db = dbObj;
 }
 
-var mongoMock = {
-    connect: function () { console.log('connect'); return dbObject; }
-};
-
-var mongoMock2 = {
-    connect: function () { console.log('connect'); return dbObject2; }
+MongoMockNew.prototype = {
+    connect: function () { return this.db; }
 }
 
 var utilMock = {
-    forceRefresh: function () { console.log('forceRefresh'); }
+    cookieUsageWarning: function () { return false; },
+    forceRefresh: function () {},
+    profanityCheck: function (animalName) { return true; }
 }
 
 var cookiePot = [];
-var db;
+
+// module scope request and response objects.
 var req = { "cookies" : {
-        "questionnumber":0,
-        "questionsanswers": ""}};
+                "questionnumber":0,
+                "questionsanswers": ""}
+          };
 var res = {
     clearCookie : function(name) { },
-    cookie : function(k,v,extras) { cookiePot[k]=v;}
+    cookie : function(k,v,extras) { cookiePot[k]=v;},
+    render : function(page, options) {}
 };
 
-var utils, mongo;
+var mongo;
 
 function commonSetup(callback) {
-    console.log('setup');
     mockery.registerAllowable('underscore');
     mockery.registerAllowable('util');
     mockery.registerAllowable('./../routes/game.js');
@@ -112,38 +90,150 @@ function commonSetup(callback) {
 
     mockery.enable();
     var _ = require('underscore');
-    utils = require('./../routes/utils.js');
+    var utils = require('./../routes/utils.js');
     mongo = require('./../routes/mongo.js');
     callback();
 }
 
 function tearDown(callback) {
     // clean up
-    console.log('teardown');
     mockery.deregisterAll();
     mockery.disable();
     callback();
 }
 
-exports.successCases = {
-    setUp: function (callback) {
-        console.log('setup');
+var dbObj = undefined;
 
-        mockery.registerMock('./../routes/mongo.js', mongoMock);
+exports.updateAnimalCases = {
+    setUp: function (callback) {
+        var findResults = [
+                    {  name: "ant",
+                        positives: [
+                            "Is it small?"
+                        ],
+                        negatives: [
+                            "Is it bigger than a sofa?"
+                        ]
+                    }
+                ];
+        dbObj = new DatabaseObject(findResults);
+        mockery.registerMock('./../routes/mongo.js', new MongoMockNew(dbObj));
         commonSetup(callback);
     },
     tearDown: tearDown,
-    test1: function (test) {
-        console.log('test1');
+    testUpdateAnimalSuccess: function (test) {
+        var updateReq = { "cookies" : {
+                            "guess": "ant",
+                            "questionnumber":3,
+                            "questionsanswers": "Can it fly?=no&Does it live in a group?=yes"},
+                          "session": {
+                            "cookieUsageWarning": ""
+                            },
+                        body : { name: "ant",
+                            question: "Is it an insect?",
+                            answer: "yes",
+                        }};
+        test.expect(7);
+        var databaseUrl = "test";
+        var collections = ["testAnimals"];
+        var db = mongo.connect(databaseUrl, collections);
+        game.updateAnimal(db.testAnimals, updateReq, res,
+                          function (res, page) {
+                              test.strictEqual(page, '/animal_added');
+                              test.strictEqual(dbObj.testAnimals.lastUpdatedDocument.name, 'ant');
+                              test.strictEqual(dbObj.testAnimals.lastUpdatedDocument.positives[0], 'Is it small?');
+                              test.strictEqual(dbObj.testAnimals.lastUpdatedDocument.positives[1], 'Does it live in a group?');
+                              test.strictEqual(dbObj.testAnimals.lastUpdatedDocument.positives[2], 'Is it an insect?');
+                              test.strictEqual(dbObj.testAnimals.lastUpdatedDocument.negatives[0], 'Is it bigger than a sofa?');
+                              test.strictEqual(dbObj.testAnimals.lastUpdatedDocument.negatives[1], 'Can it fly?');
+                              test.done();
+                          });
+    },
+    testUpdateAnimalAlertsNoQuestion: function (test) {
+        var updateReq = { "cookies" : {
+                            "guess": "ant",
+                            "questionnumber":3,
+                            "questionsanswers": "Can it fly?=no&Does it live in a group?=yes"},
+                          "session": {
+                            "cookieUsageWarning": ""
+                            },
+                        body : { name: "ant",
+                            answer: "yes"
+                        }};
+        var res = {
+            clearCookie : function(name) { },
+            cookie : function(k,v,extras) { cookiePot[k]=v;},
+            render : function(page, options) {
+                test.strictEqual(page, 'lost');
+                test.done();
+            }
+        }
+        test.expect(1);
+        var databaseUrl = "test";
+        var collections = ["testAnimals"];
+        var db = mongo.connect(databaseUrl, collections);
+        game.updateAnimal(db.testAnimals, updateReq, res, function() {});
+    },
+    testUpdateAnimalAlertsNoAnswer: function (test) {
+        var updateReq = { "cookies" : {
+                            "guess": "ant",
+                            "questionnumber":3,
+                            "questionsanswers": "Can it fly?=no&Does it live in a group?=yes"},
+                          "session": {
+                            "cookieUsageWarning": ""
+                            },
+                        body : { name: "ant",
+                            question: "Is it an insect?"
+                        }};
+        var res = {
+            clearCookie : function(name) { },
+            cookie : function(k,v,extras) { cookiePot[k]=v;},
+            render : function(page, options) {
+                test.strictEqual(page, 'lost');
+                test.done();
+            }
+        }
+        test.expect(1);
+        var databaseUrl = "test";
+        var collections = ["testAnimals"];
+        var db = mongo.connect(databaseUrl, collections);
+        game.updateAnimal(db.testAnimals, updateReq, res, function() {});
+    }
+}
+
+exports.successCases = {
+    setUp: function (callback) {
+        var findResults = [
+                    {  name: "frog",
+                        positives: [
+                            "Does it live in water?",
+                            "Is it a predator?",
+                            "Can it jump?"
+                        ],
+                        negatives: [
+                            "Is it slimy?"
+                        ] },
+                    {  name: "lion",
+                        positives: [
+                            "Is it a predator?",
+                            "Can it jump?"
+                        ],
+                        negatives: [
+                            "Does it live in water?"
+                        ] }
+                ]
+        mockery.registerMock('./../routes/mongo.js', new MongoMockNew(new DatabaseObject(findResults)));
+        commonSetup(callback);
+    },
+    tearDown: tearDown,
+    testNextQuestion: function (test) {
         test.expect(2);
         var databaseUrl = "test";
-        var collections = ["testQuestions","testAnimals"];
+        var collections = ["testAnimals"];
         var db = mongo.connect(databaseUrl, collections);
 
-        game.nextQuestion(db.testAnimals, req, res, redirect,
+        game.nextQuestion(db.testAnimals, req, res, function() {}, // redirect
                           function(req, res, questionnumber, question, qAndA) {
-                              console.log(question);
-                              console.log(questionnumber);
                               test.strictEqual(question, "Does it live in water?");
                               test.strictEqual(questionnumber, 1);
                               test.done();
@@ -153,24 +243,26 @@ exports.successCases = {
 
 exports.errorCases = {
     setUp: function (callback) {
-        mockery.registerMock('./../routes/mongo.js', mongoMock2);
+        DatabaseObject.prototype.testAnimals.find = function (query, callback) {
+                    console.log('find: error ');
+                    callback({error: "something"}, []);
+                }
+        mockery.registerMock('./../routes/mongo.js', new MongoMockNew(new DatabaseObject([])));
         commonSetup(callback);
     },
     tearDown: tearDown,
-    callbackError: function (test) {
-        console.log('callbackError');
+    testCallbackError: function (test) {
         test.expect(1);
         var databaseUrl = "test";
-        var collections = ["testQuestions","testAnimals"];
+        var collections = ["testAnimals"];
         var db = mongo.connect(databaseUrl, collections);
 
         game.nextQuestion(db.testAnimals, req, res, function (res, page) {
-                                                        console.log('redirect: ' + page);
-                                                        test.strictEqual(page, '/animal');
-                                                        test.done();
-                                                        },
-                          function (req, res, questionnumber, question, qAndA) {
-                              test.done();
-                          });
+            test.strictEqual(page, '/animal');
+            test.done();
+        },
+        function (req, res, questionnumber, question, qAndA) {
+            test.done();
+        });
     }
 };

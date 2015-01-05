@@ -84,7 +84,7 @@ exports.guessyes = function (req, res) {
         animal[0].positives = _.uniq(animal[0].positives);
 
         //        console.log(animal[0]);
-        mongo.db.a2.update({name: req.cookies.guess.toLowerCase() }, animal[0], {multi: false}, function () {
+        mongo.db.a2.update({name: req.cookies.guess.toLowerCase() }, animal[0], {multi: false}, function (err, lastErrorObject) {
             utils.forceRefresh(res);
             res.redirect('/won');
             return;

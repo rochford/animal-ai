@@ -46,9 +46,9 @@ app.configure(function() {
     });
 
     app.use(express.compress());
-    app.use(express.cookieParser(process.env.COOKIE_SECRET || 'aij'));
+    app.use(express.cookieParser()); // cookie secret is session secret
     app.use(express.session({
-        secret: process.env.COOKIE_SECRET + '1234567890QWERTY',
+        secret: process.env.COOKIE_SECRET || 'aij',
         cookie: { maxAge: new Date(Date.now() + 3600000*24*7*2) }, // 2 weeks
         store: new MongoStore({ url: process.env.MONGO_SERVER_URL,
                                 collection: 'sessions'

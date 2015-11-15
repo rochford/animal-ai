@@ -22,20 +22,12 @@ var _ = require('underscore'),
     utils = require('./utils.js'),
     mongo = require('./mongo.js');
 
-exports.dismiss = function (req, res) {
-    var session = req.session;
-    session.cookieUsageWarning = 'OK';
-    console.log('cookie usage warning OK');
-    res.redirect(req.get('referer'));
-};
-
 exports.animal_added = function (req, res) {
 //    console.log("app.get(/animal_added) " + utils.printCookies(req));
     utils.clearCookies(res);
     utils.resetCookies(res);
 
     res.render('animal_added', {path: req.path, pageTitle: 'Animal Added',
-               dismiss: utils.cookieUsageWarning(req),
                analytics: req.session.analytics});
 };
 
@@ -45,7 +37,6 @@ exports.about = function (req, res) {
     utils.resetCookies(res);
 
     res.render('about', {path: req.path, pageTitle: 'About AnimalGuess',
-               dismiss: utils.cookieUsageWarning(req),
                analytics: req.session.analytics});
 };
 
@@ -55,7 +46,6 @@ exports.error = function (req, res) {
     utils.resetCookies(res);
 
     res.render('error', {pageTitle: 'Error',
-               dismiss: utils.cookieUsageWarning(req),
                analytics: req.session.analytics});
 };
 
@@ -67,6 +57,10 @@ exports.index =  function (req, res) {
 
     res.render('index', { path: req.path,
                            pageTitle: 'Animal Guess',
-                           dismiss: utils.cookieUsageWarning(req),
                analytics: req.session.analytics});
+}
+
+exports.privacy =  function (req, res) {
+    res.render('privacy-policy', { path: req.path,
+                           pageTitle: 'Privacy Policy'});
 }

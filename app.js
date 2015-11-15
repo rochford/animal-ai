@@ -87,7 +87,6 @@ if ('development' == env) {
 app.get('/', index.index);
 app.get('/about', index.about);
 app.get('/error', index.error);
-app.get('/dismiss', index.dismiss);
 
 app.get('/newgame', game.newgame);
 app.get('/game', game.game);
@@ -104,6 +103,7 @@ app.get('/animal_added', index.animal_added);
 app.get('/guessyes', guess.guessyes);
 app.get('/guessno', guess.guessno);
 app.get('/guess', guess.guess);
+app.get('/privacy-policy', index.privacy);
 
 // Disabled for now.
 // app.get('/animal', addanimal.animal);

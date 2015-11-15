@@ -32,7 +32,6 @@ function getAllDbQuestions(req, res, alerts, callback)
         if (err || !nbDocs || nbDocs.length === 0) {
             res.render('error', {pageTitle: 'Error',
                            errorReason: 'Could not connect to database',
-                           dismiss: utils.cookieUsageWarning(req),
                        analytics: req.session.analytics});
         }
 
@@ -62,7 +61,6 @@ function removeAlreadyAskedQuestions(req, res, nbDocs, alreadyAsked, alerts) {
         if (err || !docs || docs.length === 0) {
             res.render('error', {pageTitle: 'Error',
                            errorReason: 'Could not connect to database',
-                           dismiss: utils.cookieUsageWarning(req),
                        analytics: req.session.analytics});
             return;
         }
@@ -75,7 +73,6 @@ function removeAlreadyAskedQuestions(req, res, nbDocs, alreadyAsked, alerts) {
         res.render('animal', {path: req.path,
                        alerts: alerts,
                        pageTitle: 'Add Animal', qAndA: q,
-                       dismiss: utils.cookieUsageWarning(req),
                    analytics: req.session.analytics});
     });
 

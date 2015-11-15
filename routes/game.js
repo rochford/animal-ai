@@ -74,7 +74,6 @@ function render(req, res, questionnumber, question, qAndA) {
                    questionNumber: questionnumber,
                    question: question,
                    qAndAValue: qAndA,
-                   dismiss: utils.cookieUsageWarning(req),
                    analytics: req.session.analytics});
 }
 
@@ -212,7 +211,6 @@ function updateAnimal(collection,
                        question: req.body.question,
                        guess: req.cookies.guess,
                        pageTitle: 'Lost' , qAndAValue: qAndA,
-                       dismiss: utils.cookieUsageWarning(req),
                        analytics: req.session.analytics});
         return;
     }
@@ -279,7 +277,6 @@ function updateAnimal(collection,
             utils.forceRefresh(res);
             res.render('error', {pageTitle: 'Error',
                            errorReason: 'Database error',
-                       dismiss: utils.cookieUsageWarning(req),
                        analytics: req.session.analytics});
         } else if (!docs || docs.length === 0) {
             console.log("No animal found to update - just insert.");
@@ -306,7 +303,6 @@ function updateAnimal(collection,
             utils.forceRefresh(res);
             res.render('error', {pageTitle: 'Error',
                            errorReason: 'Too many animals with same name',
-                       dismiss: utils.cookieUsageWarning(req),
                        analytics: req.session.analytics});
         }
     });
@@ -330,7 +326,6 @@ exports.lost = function (req, res) {
                    name: "",
                    question:"",
                    guess: req.cookies.guess,
-                   dismiss: utils.cookieUsageWarning(req),
                    analytics: req.session.analytics});
 };
 
@@ -343,7 +338,6 @@ exports.won = function (req, res) {
     utils.forceRefresh(res);
     res.render('won', { pageTitle: 'Won',
                    qAndAValue: qAndA,
-                   dismiss: utils.cookieUsageWarning(req),
                    analytics: req.session.analytics});
 };
 
